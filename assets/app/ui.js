@@ -67,7 +67,8 @@ export function stepper(actual) {
   const pasos = ['Cargar archivo', 'Revisar y generar'];
   return `<nav class="nxgov-stepper" data-nxgov-component="stepper" data-nxgov-current="${actual}" data-nxgov-max="${actual}" data-nxgov-navigation="none" aria-label="Progreso de la carga masiva">
     <p class="nxgov-stepper__summary"><span class="nxgov-stepper__summary-count">Paso ${actual} de 2</span> <span class="nxgov-stepper__summary-label">${pasos[actual - 1]}</span></p>
-    <div class="nxgov-stepper__track" aria-hidden="true"><span class="nxgov-stepper__bar"></span></div>
+    <div class="nxgov-stepper__track" role="progressbar" aria-label="Avance de la carga" aria-valuemin="0" aria-valuemax="2" aria-valuenow="${actual}" aria-valuetext="Paso ${actual} de 2"><span class="nxgov-stepper__bar"></span></div>
+    <p class="app-stepper-sigue">${actual === 1 ? 'Sigue: Revisar y generar' : 'Último paso: al generar vuelves al tablero'}</p>
     <ol class="nxgov-stepper__list">${pasos.map((p, i) => {
       const n = i + 1, st = n < actual ? 'completed' : n === actual ? 'active' : 'upcoming';
       return `<li class="nxgov-stepper__step nxgov-stepper__step--${st}" data-nxgov-step="${n}" ${n === actual ? 'aria-current="step"' : ''}><span class="nxgov-stepper__control"><span class="nxgov-stepper__marker" aria-hidden="true"><span class="nxgov-stepper__number">${n}</span>${icon('check', 'nxgov-stepper__check')}</span><span class="nxgov-stepper__label">${p}</span><span class="nxgov-stepper__state nxgov-sr-only">${st === 'completed' ? ', completado' : st === 'upcoming' ? ', pendiente' : ''}</span></span></li>`;
@@ -77,8 +78,8 @@ export function stepper(actual) {
 export function helpPanel(titulo) {
   return `<aside class="nxgov-help nxgov-help--horizontal" aria-labelledby="ayuda-title"><h2 class="nxgov-help__title" id="ayuda-title">${esc(titulo)}</h2>
     <ul class="nxgov-help__list" role="list">
-      <li class="nxgov-help__item"><a class="nxgov-help__link" href="#/ayuda/tutorial"><span class="nxgov-help__text">Ver el tutorial</span><span class="nxgov-help__icon" aria-hidden="true">${icon('eye', 'nxgov-help__glyph')}</span></a></li>
-      <li class="nxgov-help__item"><a class="nxgov-help__link" href="#/ayuda/manual"><span class="nxgov-help__text">Manual de uso</span><span class="nxgov-help__icon" aria-hidden="true">${icon('file-alt', 'nxgov-help__glyph')}</span></a></li>
+      <li class="nxgov-help__item"><a class="nxgov-help__link" href="#/ayuda/tutorial"><span class="nxgov-help__text">Ver el tutorial</span><span class="nxgov-help__icon" aria-hidden="true">${icon('play', 'nxgov-help__glyph')}</span></a></li>
+      <li class="nxgov-help__item"><a class="nxgov-help__link" href="#/ayuda/manual"><span class="nxgov-help__text">Manual de uso</span><span class="nxgov-help__icon" aria-hidden="true">${icon('book-open', 'nxgov-help__glyph')}</span></a></li>
     </ul></aside>`;
 }
 
@@ -101,7 +102,7 @@ export function panel({ titulo, subtitulo = '', cuerpo }) {
   const id = `panel-${++seqId}`;
   host().insertAdjacentHTML('beforeend', `<dialog class="nxgov-flyout app-panel" id="${id}" aria-labelledby="${id}-t" data-nxgov-component="flyout">
     <div class="nxgov-flyout__panel"><header class="nxgov-flyout__header"><div><h2 class="nxgov-flyout__title" id="${id}-t">${esc(titulo)}</h2>${subtitulo ? `<p class="app-panel__sub">${esc(subtitulo)}</p>` : ''}</div>
-    <button type="button" class="nxgov-button nxgov-button--outline" data-nxgov-flyout-close><span class="nxgov-button__label">Cerrar<span class="nxgov-sr-only"> panel</span></span>${icon('close')}</button></header>
+    <button type="button" class="nxgov-button nxgov-button--outline" data-nxgov-flyout-close>${icon('close')}<span class="nxgov-button__label">Cerrar<span class="nxgov-sr-only"> panel</span></span></button></header>
     <div class="nxgov-flyout__body">${cuerpo}</div></div></dialog>`);
   const el = document.getElementById(id);
   el.addEventListener('close', () => setTimeout(() => el.remove(), 400));
@@ -118,6 +119,9 @@ const EXTRA = {
   print: 'M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z',
   lock: 'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z',
   refresh: 'M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z',
+  // Figma «Ítem de ayuda»: reproducir (tutorial) y libro abierto (manual)
+  play: 'M8 5.14v13.72a1 1 0 0 0 1.52.85l10.8-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z',
+  'book-open': 'M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z',
   'arrow-left': 'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z',
 };
 export function registrarIconos() {

@@ -94,6 +94,7 @@ export function simularFirma(gid) { declaracionesDe(gid).forEach((d) => { if (d.
 
 export function pagar(id, banco) {
   const d = declaracion(id);
+  if (d.estado === 'pagada') return d.pago; // nunca registrar el mismo pago dos veces
   d.estado = 'pagada';
   d.pago = { referencia: `PSE-${++state.seq.pago}`, banco, fecha: hoyReal().toISOString(), valor: d.liq.total };
   save();

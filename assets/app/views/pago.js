@@ -82,7 +82,11 @@ export function vistaPse(id) {
       </dl>
       <div class="app-acciones">${btn('Rechazar pago (demo)', { variant: 'danger', iconName: 'close', attrs: 'data-rechazar' })}${btn('Aprobar pago (demo)', { variant: 'primary', iconName: 'check', attrs: 'data-aprobar' })}</div></div>`,
     bind: (root) => root.addEventListener('click', (ev) => {
-      const t = ev.target.closest('button'); if (!t) return;
+      const t = ev.target.closest('[data-aprobar], [data-rechazar]'); if (!t) return;
+      // Un solo intento por visita: los dos botones quedan bloqueados mientras el banco responde.
+      const botones = root.querySelectorAll('[data-aprobar], [data-rechazar]');
+      if ([...botones].some((b) => b.disabled)) return;
+      botones.forEach((b) => { b.disabled = true; });
       window.nxgov.setBusy?.(t, true, 'Procesando el pago');
       setTimeout(() => {
         if ('aprobar' in t.dataset) { store.pagar(id, p.banco); delete datosPago[id]; setFlash({ tipo: 'success', titulo: 'Pago aprobado', mensaje: `El banco aprobó el pago de ${pesos(d.liq.total)}.` }); location.hash = `#/pago/${id}/comprobante`; }

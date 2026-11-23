@@ -23,11 +23,14 @@ export function vistaGrupo(gid) {
     firmado: aviso('success', 'Grupo firmado', 'Todas las declaraciones están firmadas. Págalas una por una desde el tablero antes de la fecha límite de cada entidad.', `<p class="nxgov-alert__message"><a class="nxgov-alert__link" href="#/declaraciones">Ir al tablero para pagar</a></p>`),
   }[est] || '';
 
-  const items = ds.map((d) => {
+  // Figma 04: se ven 4 ítems y «Ver las N declaraciones»; la seleccionada siempre queda visible.
+  const iSel = ds.findIndex((d) => d.id === actual?.id);
+  const items = ds.map((d, i) => {
     const e = store.ent(d.dane), ok = store.firmantesCompletos(d), sel = d.id === actual?.id;
-    return `<li class="app-item ${sel ? 'app-item--sel' : ''}"><button type="button" class="app-item__main" data-ver="${d.id}" ${sel ? 'aria-current="true"' : ''}>
+    const oculto = ui.grupoVerTodas !== gid && ds.length > 4 && i >= 4 && i !== iSel;
+    return `<li class="app-item ${sel ? 'app-item--sel' : ''}" data-nombre="${esc(e.nombre.toLowerCase())} ${esc(d.dane)}" ${oculto ? 'hidden data-mas-items' : ''}><button type="button" class="app-item__main" data-ver="${d.id}" ${sel ? 'aria-current="true"' : ''}>
       <span class="app-item__titulo">${esc(e.nombre)}</span><span class="app-item__detalle">DANE ${esc(d.dane)} · ${periodo(d)} · ${d.firmantes.length} ${d.firmantes.length === 1 ? 'firmante' : 'firmantes'}</span></button>
-      ${d.estado === 'borrador' ? tag(ok ? 'Firmantes completos' : 'Faltan firmantes', ok ? 'completed' : 'pending') : tag(ESTADOS[d.estado].texto, ESTADOS[d.estado].tag)}
+      ${d.estado === 'borrador' ? tag(ok ? 'Completa' : 'Pendiente', ok ? 'completed' : 'pending') : tag(ESTADOS[d.estado].texto, ESTADOS[d.estado].tag)}
       ${editable ? `<button type="button" class="app-link app-item__quitar" data-quitar="${d.id}">Quitar del grupo<span class="nxgov-sr-only"> ${esc(e.nombre)}</span></button>` : ''}</li>`;
   }).join('');
 
@@ -46,7 +49,12 @@ export function vistaGrupo(gid) {
         <section class="app-card app-grupo__lista" aria-labelledby="lista-t">
           <h2 class="app-h3" id="lista-t">Declaraciones del grupo (${ds.length})</h2>
           ${editable ? btn('Agregar declaraciones', { iconName: 'plus', attrs: 'data-agregar' }) : ''}
-          <ul class="app-items" role="list">${items}</ul>
+          <form class="nxgov-search" role="search" data-buscar-items><label class="nxgov-sr-only" for="buscar-items">Buscar entidad en el grupo</label>
+            <input class="nxgov-search__input" id="buscar-items" type="search" placeholder="Buscar entidad" autocomplete="off">
+            <button class="nxgov-search__button" type="submit">${icon('search', 'nxgov-search__icon')}<span class="nxgov-sr-only">Buscar</span></button></form>
+          <ul class="app-items" role="list" id="items-grupo">${items}</ul>
+          <p class="nxgov-sr-only" role="status" id="items-estado"></p>
+          ${ui.grupoVerTodas !== gid && ds.length > 4 ? `<button type="button" class="app-link" data-ver-todas aria-controls="items-grupo">Ver las ${ds.length} declaraciones</button>` : ''}
         </section>
         <section class="app-card app-grupo__firmantes" aria-labelledby="decl-t">
           ${actual ? formFirmantes(actual, editable, ds.length) : '<p>Selecciona una declaración.</p>'}
@@ -56,7 +64,7 @@ export function vistaGrupo(gid) {
       <h2 class="app-h2">Firmantes del grupo</h2>
       <table class="app-table app-table--stack"><caption class="nxgov-sr-only">Firmantes del grupo</caption>
         <thead><tr><th scope="col">Firmante</th><th scope="col">Rol</th><th scope="col">Documento</th><th scope="col">Tarjeta prof.</th><th scope="col">Correo</th><th scope="col" class="app-num">Declaraciones</th><th scope="col">Estado</th></tr></thead>
-        <tbody>${[...firmantesGrupo.values()].map((f) => `<tr><th scope="row" data-label="Firmante">${esc(f.nombre)}</th><td data-label="Rol">${esc(f.rol)}</td><td data-label="Documento">${esc(f.documento)}</td><td data-label="Tarjeta prof.">${esc(f.tp || '—')}</td><td data-label="Correo">${esc(f.correo)}</td><td data-label="Declaraciones" class="app-num">${f.n}</td><td data-label="Estado">${est === 'firmado' ? tag('Firmó', 'completed') : est === 'en-firma' ? tag('Correo enviado', 'pending') : tag('Sin enviar', 'neutral')}</td></tr>`).join('') || '<tr><td colspan="7">Aún no hay firmantes.</td></tr>'}</tbody></table>
+        <tbody>${[...firmantesGrupo.values()].map((f) => `<tr><th scope="row" data-label="Firmante">${esc(f.nombre)}</th><td data-label="Rol">${esc(f.rol)}</td><td data-label="Documento">${esc(f.documento)}</td><td data-label="Tarjeta prof.">${esc(f.tp || '—')}</td><td data-label="Correo">${esc(f.correo)}</td><td data-label="Declaraciones" class="app-num">${f.n}</td><td data-label="Estado">${est === 'firmado' ? tag('Firmó', 'completed') : est === 'en-firma' ? tag('Correo enviado', 'pending') : tag('Sin firmar', 'pending')}</td></tr>`).join('') || '<tr><td colspan="7">Aún no hay firmantes.</td></tr>'}</tbody></table>
       <div class="app-acciones app-acciones--between">${linkBtn('Volver al tablero', '#/declaraciones', { iconName: 'arrow-left' })}
         ${editable ? `<div class="app-acciones">${btn('Guardar firmantes', { iconName: 'save', attrs: 'data-guardar' })}${btn('Firmar declaraciones', { variant: 'primary', iconName: 'signature', attrs: 'data-enviar' })}</div>` : ''}</div>`,
     bind: (root) => bindGrupo(root, g),
@@ -66,7 +74,7 @@ export function vistaGrupo(gid) {
 function formFirmantes(d, editable, nGrupo) {
   const e = store.ent(d.dane);
   const lista = d.firmantes.length ? d.firmantes : (editable ? [vacio()] : []);
-  return `<div class="app-firm-head"><div><h2 class="app-h3" id="decl-t">${esc(e.nombre)}</h2><p class="app-muted">${esc(e.depto)} · DANE ${esc(d.dane)} · ${periodo(d)} · ${pesos(d.liq.total)}</p>
+  return `<div class="app-firm-head"><div><h2 class="app-h3" id="decl-t">${esc(e.nombre)}</h2><p class="app-muted">${esc(e.depto)} · DANE ${esc(d.dane)} · ${d.firmantes.length} ${d.firmantes.length === 1 ? 'firmante' : 'firmantes'}</p>
     <p class="app-muted">${e.exigeRevisor ? 'Esta entidad exige declarante principal y revisor fiscal o contador.' : 'Esta entidad exige el declarante principal.'}</p></div>
     ${editable ? `<div class="app-acciones">${btn('Copiar a todo el grupo', { iconName: 'copy', attrs: `data-copiar ${nGrupo < 2 ? 'disabled' : ''}` })}${btn('Agregar firmante', { iconName: 'plus', attrs: 'data-mas' })}</div>` : ''}</div>
     <form id="form-firmantes" novalidate data-decl="${d.id}">${lista.map((f, i) => fieldsetFirmante(f, i, editable)).join('')}</form>`;
@@ -97,11 +105,12 @@ function leerForm(root) {
 /** Marca errores en línea (aria-invalid + mensaje). Devuelve el primer campo con error o null. */
 function validar(root) {
   root.querySelectorAll('.nxgov-field__error').forEach((p) => p.remove());
-  root.querySelectorAll('[aria-invalid]').forEach((i) => { i.removeAttribute('aria-invalid'); const h = i.id + '-hint'; i.setAttribute('aria-describedby', document.getElementById(h) ? h : ''); });
+  root.querySelectorAll('[aria-invalid]').forEach((i) => { i.removeAttribute('aria-invalid'); const h = i.id + '-hint'; if (document.getElementById(h)) i.setAttribute('aria-describedby', h); else i.removeAttribute('aria-describedby'); });
   let primero = null;
   const marcar = (input, msg) => {
     input.setAttribute('aria-invalid', 'true');
-    const p = document.createElement('p'); p.className = 'nxgov-field__error'; p.id = `${input.id}-error`; p.textContent = msg;
+    const p = document.createElement('p'); p.className = 'nxgov-field__error'; p.id = `${input.id}-error`;
+    p.innerHTML = `${icon('error', 'nxgov-field__error-icon')}<span>${esc(msg)}</span>`;
     input.closest('.nxgov-field').appendChild(p);
     input.setAttribute('aria-describedby', `${input.getAttribute('aria-describedby') || ''} ${p.id}`.trim());
     primero ||= input;
@@ -126,8 +135,18 @@ function bindGrupo(root, g) {
     if (!silencioso) { render(); notificar('success', 'Firmantes guardados. El grupo quedó guardado.'); }
     return true;
   };
+  const buscar = () => {
+    const q = root.querySelector('#buscar-items').value.trim().toLowerCase();
+    const lis = [...root.querySelectorAll('#items-grupo > li')];
+    if (q) { ui.grupoVerTodas = g.id; root.querySelector('[data-ver-todas]')?.remove(); }
+    lis.forEach((li) => { li.hidden = q ? !li.dataset.nombre.includes(q) : li.hasAttribute('data-mas-items') && ui.grupoVerTodas !== g.id; });
+    root.querySelector('#items-estado').textContent = `${lis.filter((li) => !li.hidden).length} declaraciones visibles`;
+  };
+  root.querySelector('#buscar-items')?.addEventListener('input', buscar);
+  root.querySelector('[data-buscar-items]')?.addEventListener('submit', (e) => { e.preventDefault(); buscar(); });
   root.addEventListener('click', (e) => {
     const t = e.target.closest('button, a'); if (!t) return;
+    if ('verTodas' in t.dataset) { ui.grupoVerTodas = g.id; root.querySelectorAll('#items-grupo > [hidden]').forEach((li) => { li.hidden = false; }); t.remove(); return; }
     if (t.dataset.ver) { if (!guardarBorradorSilencioso()) return; ui.grupoSeleccion[g.id] = t.dataset.ver; render(); return; }
     if (t.dataset.quitar) { quitar(g, t.dataset.quitar); return; }
     if ('agregar' in t.dataset) { agregar(g); return; }
@@ -162,7 +181,7 @@ function agregar(g) {
       ${candidatas.length ? `<fieldset class="app-fieldset"><legend class="app-fieldset__legend">Borradores disponibles (${candidatas.length})</legend><ul class="app-opciones" role="list">
         ${candidatas.map((d) => { const e = store.ent(d.dane), og = d.grupoId ? store.grupo(d.grupoId).nombre : 'Sin grupo'; return `<li class="app-opcion"><input type="checkbox" id="ad-${d.id}" value="${d.id}"><label for="ad-${d.id}"><span class="app-opcion__titulo">${esc(e.nombre)}</span><span class="app-opcion__detalle">DANE ${esc(d.dane)} · ${periodo(d)} · ${pesos(d.liq.total)} · ${esc(og)}</span></label></li>`; }).join('')}
       </ul></fieldset>
-      <p class="app-error" id="err-ad" hidden>Selecciona al menos una declaración.</p>
+      <p class="nxgov-field__error" id="err-ad" role="alert" hidden>${icon('error', 'nxgov-field__error-icon')}<span>Selecciona al menos una declaración.</span></p>
       <div class="app-acciones app-acciones--end">${btn('Cancelar', { attrs: 'data-nxgov-flyout-close' })}${btn('Agregar al grupo', { variant: 'primary', iconName: 'plus', attrs: 'data-confirmar' })}</div>`
       : `<p>No hay borradores disponibles para agregar. Haz una <a href="#/carga">nueva carga masiva</a> o quita declaraciones de otro grupo sin enviar.</p>`}` });
   el.addEventListener('click', (e) => {

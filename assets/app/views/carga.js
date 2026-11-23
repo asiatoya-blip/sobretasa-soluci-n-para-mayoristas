@@ -36,7 +36,7 @@ export function vistaCarga() {
         </ul>
         <div class="app-acciones">
           <a class="nxgov-button nxgov-button--outline" href="plantillas/Plantilla_Declaraciones_Sobretasa.xlsx" download>${icon('download')}<span class="nxgov-button__label">Descargar plantilla (.xlsx)</span></a>
-          ${btn('Descargar ejemplo diligenciado', { iconName: 'file-alt', attrs: 'data-ejemplo' })}
+          <button type="button" class="app-link" data-ejemplo>Ver un ejemplo diligenciado</button>
         </div>
       </section>
       ${aviso('warning', 'Solo puedes declarar ante entidades habilitadas', 'Si el archivo incluye una entidad que no está habilitada en la plataforma, esa fila no se generará.', '<p class="nxgov-alert__message"><a class="nxgov-alert__link" href="#/entidades">Ver entidades disponibles</a></p>')}
@@ -104,11 +104,16 @@ export function vistaRevision() {
     f.advertencias.forEach((o) => obs.push({ f, tipo: 'Advertencia', tagT: 'pending', nombre, o }));
   }
   const tablaObs = obs.length ? `<h2 class="app-h2">Filas con observaciones (${obs.length})</h2>
-    <table class="app-table app-table--stack"><caption class="nxgov-sr-only">Observaciones de la revisión del archivo</caption>
+    <ul class="app-mlista app-solo-movil" role="list" aria-label="Filas con observaciones">${obs.map(({ f, tipo, tagT, nombre, o }) => `<li class="app-mitem"><span class="app-mitem__titulo">Fila ${f.fila}</span>${tag(tipo, tagT)}
+      <p><strong>${esc(nombre)}</strong></p><p class="app-mitem__sub">Columna: ${esc(o.columna)}</p><p>${esc(o.problema)}</p><p class="app-mitem__nota">${esc(o.solucion)}</p></li>`).join('')}</ul>
+    <table class="app-table app-solo-desk"><caption class="nxgov-sr-only">Observaciones de la revisión del archivo</caption>
     <thead><tr><th scope="col">Fila</th><th scope="col">Tipo</th><th scope="col">Entidad</th><th scope="col">Columna</th><th scope="col">Qué pasa</th><th scope="col">Cómo corregirlo</th></tr></thead>
     <tbody>${obs.map(({ f, tipo, tagT, nombre, o }) => `<tr><td data-label="Fila">${f.fila}</td><td data-label="Tipo">${tag(tipo, tagT)}</td><td data-label="Entidad"><strong>${esc(nombre)}</strong><span class="app-table__sub">DANE ${esc(f.dane || '—')}</span></td><td data-label="Columna">${esc(o.columna)}</td><td data-label="Qué pasa">${esc(o.problema)}</td><td data-label="Cómo corregirlo">${esc(o.solucion)}</td></tr>`).join('')}</tbody></table>` : '';
   const tablaVal = validas.length ? `<h2 class="app-h2">Declaraciones que se generarán (${validas.length})</h2>
-    <table class="app-table app-table--stack"><caption class="nxgov-sr-only">Vista previa de las declaraciones</caption>
+    <ul class="app-mlista app-solo-movil" role="list" aria-label="Declaraciones que se generarán" id="previa-movil">${validas.map((f, i) => `<li class="app-mitem" ${i >= 3 ? 'hidden' : ''}><span class="app-mitem__titulo">${esc(f.entidad.nombre)}</span>${f.liquidacion.extemporanea ? tag('Extemporánea', 'pending') : tag('Lista', 'signed')}
+      <p class="app-mitem__sub">${num(f.liquidacion.galones)} gal · ${pesos(f.liquidacion.total)}</p></li>`).join('')}</ul>
+    ${validas.length > 3 ? `<button type="button" class="app-link app-solo-movil" data-ver-todas aria-controls="previa-movil" aria-expanded="false">Ver las ${validas.length} declaraciones</button>` : ''}
+    <table class="app-table app-solo-desk"><caption class="nxgov-sr-only">Vista previa de las declaraciones</caption>
     <thead><tr><th scope="col">Entidad</th><th scope="col">Periodo</th><th scope="col" class="app-num">Galones</th><th scope="col" class="app-num">Impuesto</th><th scope="col" class="app-num">Sanción</th><th scope="col" class="app-num">Total</th><th scope="col">Estado</th><th scope="col">Acción</th></tr></thead>
     <tbody>${validas.map((f, i) => `<tr><th scope="row" data-label="Entidad">${esc(f.entidad.nombre)}<span class="app-table__sub">${esc(f.entidad.depto)} · DANE ${esc(f.dane)}</span></th>
       <td data-label="Periodo">${periodo(f.periodo)}</td><td data-label="Galones" class="app-num">${num(f.liquidacion.galones)}</td><td data-label="Impuesto" class="app-num">${pesos(f.liquidacion.impuesto)}</td>
@@ -121,7 +126,7 @@ export function vistaRevision() {
     html: `${cabecera()}
       ${stepper(2)}
       ${sectionHeading('revision-t', 'Revisa el resultado de tu archivo', `${archivo} · Aún no se ha creado ninguna declaración.`, 'check-double')}
-      <div class="app-kpis">${kpi('Filas leídas', filas.length, `De ${PARAMS.maxFilas} permitidas`)}${kpi('Listas para generar', validas.length, `${validas.length - conAdv.length} sin observaciones · ${conAdv.length} con advertencia`)}${kpi('Con errores', conError.length, 'No se generarán')}${kpi('Con advertencias', conAdv.length, 'Se generan; revísalas')}</div>
+      <div class="app-kpis app-kpis--2x2">${kpi('Filas leídas', filas.length, `De ${PARAMS.maxFilas} permitidas`)}${kpi('Listas para generar', validas.length, `${validas.length - conAdv.length} sin observaciones · ${conAdv.length} con advertencia`)}${kpi('Con errores', conError.length, 'No se generarán')}${kpi('Con advertencias', conAdv.length, 'Se generan; revísalas')}</div>
       ${resultado.errorArchivo.map((m) => aviso('danger', 'No podemos generar esta carga', esc(m))).join('')}
       ${conError.length && !resultado.errorArchivo.length ? aviso('danger', `${conError.length} ${conError.length === 1 ? 'fila tiene errores y no se generará' : 'filas tienen errores y no se generarán'}`, `Corrige tu archivo y vuelve a cargarlo, o continúa solo con las ${validas.length} declaraciones listas. Las filas con error no se guardan.`) : ''}
       ${extemp.length ? aviso('warning', `${extemp.length} ${extemp.length === 1 ? 'declaración es extemporánea' : 'declaraciones son extemporáneas'}`, 'Están fuera del plazo de su entidad. Se generan con la sanción por extemporaneidad y los intereses de mora que define cada entidad (valores simulados).') : ''}
@@ -140,6 +145,10 @@ export function vistaRevision() {
         location.hash = '#/declaraciones';
       });
       root.addEventListener('click', (e) => { const b = e.target.closest('[data-calculo]'); if (b) verCalculo(validas[Number(b.dataset.calculo)]); });
+      root.querySelector('[data-ver-todas]')?.addEventListener('click', (e) => {
+        root.querySelectorAll('#previa-movil > [hidden]').forEach((li) => { li.hidden = false; });
+        e.currentTarget.remove();
+      });
     },
   };
 }

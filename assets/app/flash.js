@@ -7,6 +7,7 @@ export const ui = {
   seleccion: new Set(),
   filtros: null, // { anio, mes, estado, q } — se inicializa con el periodo vigente
   pagina: 1,
+  paginaEnt: 1, // página de la pestaña Entidades
   revision: null, // { archivo, resultado } mientras se revisa una carga
   grupoSeleccion: {}, // grupoId → declaración seleccionada en la vista de grupo
 };

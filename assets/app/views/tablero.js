@@ -21,7 +21,8 @@ export function encabezado(tab) {
     ? `Ventana de presentación de las alcaldías: del 1 al 8 de ${MESES[(P.mes) % 12]} · Quedan ${dias} ${dias === 1 ? 'día' : 'días'}. Las gobernaciones tienen plazo hasta el día 15.`
     : `La ventana de las alcaldías cerró el ${fecha(limiteAlc.toISOString())}: las declaraciones de ${periodoCorto(P).toLowerCase()} se liquidan con la sanción por extemporaneidad de cada entidad. La próxima ventana (${periodoCorto(sig).toLowerCase()}) es del 1 al 8 de ${MESES[sig.mes % 12]}.`;
   const kpi = (et, val, apoyo) => `<div class="app-kpi"><p class="app-kpi__label">${et}</p><p class="app-kpi__value">${val}</p><p class="app-kpi__help">${apoyo}</p></div>`;
-  const tabLink = (id, label, ic, href) => `<a class="nxgov-tabs__tab" href="${href}" ${tab === id ? 'aria-current="page"' : ''}>${icon(ic, 'nxgov-tabs__icon')}<span class="nxgov-tabs__label">${label}</span></a>`;
+  // Figma: pestañas sin ícono; en móvil solo la primera palabra («Declaraciones · Entidades · Grupos»).
+  const tabLink = (id, corto, extra, href) => `<a class="nxgov-tabs__tab" href="${href}" ${tab === id ? 'aria-current="page"' : ''}><span class="nxgov-tabs__label">${corto}<span class="app-tab__extra">${extra}</span></span></a>`;
   return `
     ${breadcrumb([{ label: 'Inicio', href: '#/' }, { label: 'Declaraciones masivas de sobretasa' }])}
     <div class="app-pagehead">
@@ -49,9 +50,9 @@ export function encabezado(tab) {
     </section>
     ${helpPanel('¿Primera vez haciendo una carga masiva?')}
     <nav class="nxgov-tabs app-tabs" aria-label="Secciones del tablero"><div class="nxgov-tabs__list">
-      ${tabLink('declaraciones', 'Declaraciones del periodo', 'file-alt', '#/declaraciones')}
-      ${tabLink('entidades', `Entidades disponibles (${ENTIDADES.length})`, 'store', '#/entidades')}
-      ${tabLink('grupos', `Grupos de firma (${s.grupos.length})`, 'layer-group', '#/grupos')}
+      ${tabLink('declaraciones', 'Declaraciones', ` del periodo (${delP.length})`, '#/declaraciones')}
+      ${tabLink('entidades', 'Entidades', ` disponibles (${ENTIDADES.length})`, '#/entidades')}
+      ${tabLink('grupos', 'Grupos', ` de firma (${s.grupos.length})`, '#/grupos')}
     </div></nav>`;
 }
 
@@ -61,7 +62,7 @@ export function vistaTablero(tab) {
   return {
     titulo: 'Tablero del periodo',
     html: `${encabezado(tab)}<div class="app-tabpanel">${cuerpo}</div>`,
-    bind: (root) => { if (tab === 'declaraciones') bindDeclaraciones(root); },
+    bind: (root) => { if (tab === 'declaraciones') bindDeclaraciones(root); if (tab === 'entidades') bindEntidades(root); },
     after: () => { if (flash) notificar(flash.variant, flash.message, flash.title); },
   };
 }
@@ -118,16 +119,16 @@ function tarjeta(d) {
   const mensaje = `${est.mensaje}${d.liq.extemporanea ? ` Incluye sanción por extemporaneidad de ${pesos(d.liq.sancion)}.` : ''}${g ? ` Grupo: ${g.nombre}.` : ''}`;
   return `<li class="app-seleccionable">
     <div class="app-seleccionable__check">${sel
-      ? `<input type="checkbox" class="app-check" id="sel-${d.id}" data-sel="${d.id}" ${ui.seleccion.has(d.id) ? 'checked' : ''}><label class="nxgov-sr-only" for="sel-${d.id}">Seleccionar ${esc(titulo)}</label>`
-      : `<input type="checkbox" class="app-check" disabled aria-label="${esc(titulo)}: solo se agrupan borradores que no están en firma">`}</div>
+      ? `<input type="checkbox" class="app-check" id="sel-${d.id}" data-sel="${d.id}" ${ui.seleccion.has(d.id) ? 'checked' : ''}><label class="app-sel-label" for="sel-${d.id}">Seleccionar para un grupo de firma<span class="nxgov-sr-only">: ${esc(titulo)}</span></label>`
+      : `<input type="checkbox" class="app-check" id="sel-${d.id}" disabled><label class="app-sel-label" for="sel-${d.id}">Solo se agrupan borradores<span class="nxgov-sr-only">: ${esc(titulo)} no se puede seleccionar</span></label>`}</div>
     <article class="nxgov-declaration-list-item" data-nxgov-status="${d.estado}" aria-labelledby="t-${d.id}">
       <div class="nxgov-declaration-list-item__summary">
         <div class="nxgov-declaration-list-item__cell--period"><h3 class="nxgov-declaration-list-item__period" id="t-${d.id}">${esc(e.nombre)}</h3>
-          <p class="nxgov-declaration-list-item__created">${esc(e.depto)} · DANE ${esc(d.dane)} · ${periodo(d)} · N.° ${d.numero}</p></div>
+          <p class="nxgov-declaration-list-item__created">${esc(e.depto)} · DANE ${esc(d.dane)} · ${periodo(d)}</p></div>
         <dl class="nxgov-declaration-list-item__details">
-          <div class="nxgov-declaration-list-item__field"><dt class="nxgov-declaration-list-item__label">Galones</dt><dd class="nxgov-declaration-list-item__value">${num(d.liq.galones)}</dd></div>
+          <div class="nxgov-declaration-list-item__field app-campo-galones"><dt class="nxgov-declaration-list-item__label">Galones</dt><dd class="nxgov-declaration-list-item__value">${num(d.liq.galones)}</dd></div>
           <div class="nxgov-declaration-list-item__field"><dt class="nxgov-declaration-list-item__label">Total a pagar</dt><dd class="nxgov-declaration-list-item__value"><data class="nxgov-declaration-list-item__amount" value="${d.liq.total}">${pesos(d.liq.total)}</data></dd></div>
-          <div class="nxgov-declaration-list-item__field"><dt class="nxgov-declaration-list-item__label">Estado</dt><dd class="nxgov-declaration-list-item__value">${tag(est.texto, est.tag)}</dd></div>
+          <div class="nxgov-declaration-list-item__field app-campo-estado"><dt class="nxgov-declaration-list-item__label">Estado</dt><dd class="nxgov-declaration-list-item__value">${tag(est.texto, est.tag)}</dd></div>
         </dl></div>
       <div class="nxgov-declaration-list-item__footer"><p class="nxgov-declaration-list-item__message">${icon('info', 'nxgov-declaration-list-item__message-icon')}${esc(mensaje)}</p>
         <div class="nxgov-declaration-list-item__actions" role="group" aria-label="Acciones de ${esc(titulo)}">${acciones}</div></div>
@@ -225,9 +226,10 @@ function agregarAGrupo(root) {
   const ids = [...ui.seleccion];
   const total = ids.reduce((a, id) => a + store.declaracion(id).liq.total, 0);
   const s = store.getState();
+  const primero = s.grupos.find((g) => store.grupoEditable(g));
   const opciones = s.grupos.map((g) => {
     const est = store.estadoGrupo(g), ed = store.grupoEditable(g), n = store.declaracionesDe(g.id).length;
-    return `<li class="app-opcion ${ed ? '' : 'app-opcion--off'}"><input type="radio" name="grupo-destino" id="gd-${g.id}" value="${g.id}" ${ed ? '' : 'disabled'}>
+    return `<li class="app-opcion ${ed ? '' : 'app-opcion--off'}"><input type="radio" name="grupo-destino" id="gd-${g.id}" value="${g.id}" data-nombre="${esc(g.nombre)}" ${ed ? (g === primero ? 'checked' : '') : 'disabled'}>
       <label for="gd-${g.id}"><span class="app-opcion__titulo">${esc(g.nombre)}</span><span class="app-opcion__detalle">${n} declaraciones · ${ed ? (est === 'listo' ? 'Firmantes definidos' : 'Sin firmantes') : est === 'en-firma' ? 'Ya está en firma' : 'Ya firmado'}</span></label>
       ${tag(ESTADOS_GRUPO[est].texto, ESTADOS_GRUPO[est].tag)}</li>`;
   }).join('');
@@ -235,8 +237,11 @@ function agregarAGrupo(root) {
     cuerpo: `${aviso('info', 'Solo grupos que aún no se envían a firma', 'Si el grupo ya está en firma o firmado, crea un grupo nuevo con estas declaraciones.')}
       <fieldset class="app-fieldset"><legend class="app-fieldset__legend">Elige el grupo</legend><ul class="app-opciones" role="list">${opciones}</ul></fieldset>
       <p class="app-error" id="err-grupo" hidden>Elige un grupo para continuar.</p>
-      <div class="app-acciones app-acciones--end">${btn('Cancelar', { attrs: 'data-nxgov-flyout-close' })}${btn('Agregar al grupo', { variant: 'primary', iconName: 'plus', attrs: 'data-confirmar' })}</div>
+      <div class="app-acciones app-acciones--end">${btn('Cancelar', { attrs: 'data-nxgov-flyout-close' })}${btn(primero ? `Agregar a ${primero.nombre}` : 'Agregar al grupo', { variant: 'primary', iconName: 'plus', attrs: 'data-confirmar' })}</div>
       <p><a href="#" data-nuevo>¿Ninguno sirve? Crea un grupo nuevo</a></p>` });
+  el.addEventListener('change', (e) => {
+    if (e.target.name === 'grupo-destino') el.querySelector('[data-confirmar] .nxgov-button__label').textContent = `Agregar a ${e.target.dataset.nombre}`;
+  });
   el.addEventListener('click', (e) => {
     if (e.target.closest('[data-nuevo]')) { e.preventDefault(); cerrarPanel(el); crearGrupo(); return; }
     if (!e.target.closest('[data-confirmar]')) return;
@@ -247,18 +252,48 @@ function agregarAGrupo(root) {
   });
 }
 
-// ---------- Entidades ----------
+// ---------- Entidades (Figma 01b: una columna con nombre y «Depto · DANE», paginada de 7 en 7) ----------
+const POR_PAGINA_ENT = 7;
+function paginacion(actual, paginas, etiqueta) {
+  if (paginas < 2) return '';
+  return `<nav class="nxgov-pagination" aria-label="Paginación de ${etiqueta}"><ul class="nxgov-pagination__list">
+    <li><a class="nxgov-pagination__link nxgov-pagination__link--step" ${actual === 1 ? 'role="link" aria-disabled="true"' : `href="#" data-pag="${actual - 1}"`} aria-label="Página anterior">Anterior</a></li>
+    ${Array.from({ length: paginas }, (_, i) => i + 1).map((p) => `<li><a class="nxgov-pagination__link" href="#" data-pag="${p}" ${p === actual ? 'aria-current="page"' : ''} aria-label="Página ${p}${p === actual ? ', página actual' : ''}">${p}</a></li>`).join('')}
+    <li><a class="nxgov-pagination__link nxgov-pagination__link--step" ${actual === paginas ? 'role="link" aria-disabled="true"' : `href="#" data-pag="${actual + 1}"`} aria-label="Página siguiente">Siguiente</a></li></ul></nav>`;
+}
 function entidades() {
-  return `<table class="app-table"><caption class="nxgov-sr-only">Entidades disponibles para declarar</caption>
-    <thead><tr><th scope="col">Entidad</th><th scope="col">Departamento</th><th scope="col">Código DANE</th><th scope="col">Tipo</th></tr></thead>
-    <tbody>${ENTIDADES.map((e) => `<tr><th scope="row">${esc(e.nombre)}</th><td>${esc(e.depto)}</td><td>${esc(e.dane)}</td><td>${esc(e.tipo)}</td></tr>`).join('')}</tbody></table>
+  return `<div id="lista-entidades"></div>
     ${aviso('info', 'Entidades disponibles para declarar', 'Solo puedes declarar ante estas entidades: están inscritas y habilitadas en la consola administrativa. Si falta alguna, comunícate con el administrador de la plataforma.')}`;
+}
+function pintarEntidades(root) {
+  const paginas = Math.ceil(ENTIDADES.length / POR_PAGINA_ENT);
+  ui.paginaEnt = Math.min(Math.max(1, ui.paginaEnt || 1), paginas);
+  const desde = (ui.paginaEnt - 1) * POR_PAGINA_ENT, items = ENTIDADES.slice(desde, desde + POR_PAGINA_ENT);
+  root.querySelector('#lista-entidades').innerHTML = `<table class="app-table"><caption class="nxgov-sr-only">Entidades disponibles para declarar</caption>
+    <thead><tr><th scope="col">Entidad</th></tr></thead>
+    <tbody>${items.map((e) => `<tr><th scope="row">${esc(e.nombre)}<span class="app-table__sub">${esc(e.depto)} · DANE ${esc(e.dane)}</span></th></tr>`).join('')}</tbody></table>
+    <div class="app-paginacion"><p>Mostrando ${desde + 1} a ${desde + items.length} de ${ENTIDADES.length} entidades</p>${paginacion(ui.paginaEnt, paginas, 'entidades')}</div>`;
+}
+function bindEntidades(root) {
+  pintarEntidades(root);
+  root.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-pag]'); if (!t) return;
+    e.preventDefault(); ui.paginaEnt = Number(t.dataset.pag); pintarEntidades(root);
+    root.querySelector('#lista-entidades')?.scrollIntoView({ block: 'start' });
+  });
 }
 
 // ---------- Grupos ----------
 function grupos() {
   const s = store.getState();
-  const filas = [...s.grupos].reverse().map((g) => {
+  const lista = [...s.grupos].reverse();
+  const movil = lista.map((g) => {
+    const ds = store.declaracionesDe(g.id), clave = store.estadoGrupo(g), est = ESTADOS_GRUPO[clave];
+    const firm = { 'sin-firmantes': 'Sin firmantes definidos', listo: 'Firmantes definidos', 'en-firma': 'Enviado a firma', firmado: 'Firmado' }[clave] || 'Sin declaraciones';
+    return `<li><a class="app-mitem" href="#/grupo/${g.id}"><span class="app-mitem__titulo">${esc(g.nombre)}</span>${tag(est.texto, est.tag)}
+      <p class="app-mitem__sub">${ds.length} ${ds.length === 1 ? 'declaración' : 'declaraciones'} · ${firm}</p></a></li>`;
+  }).join('');
+  const filas = lista.map((g) => {
     const ds = store.declaracionesDe(g.id), est = ESTADOS_GRUPO[store.estadoGrupo(g)];
     const firmantes = [...new Set(ds.flatMap((d) => d.firmantes.map((f) => f.nombre)))];
     return `<tr><th scope="row"><a href="#/grupo/${g.id}">${esc(g.nombre)}</a><span class="app-table__sub">${g.origen === 'carga' ? 'Creado al generar' : 'Creado a mano'} · ${fecha(g.creado)}</span></th>
@@ -267,7 +302,8 @@ function grupos() {
       <td><a href="#/grupo/${g.id}">${store.estadoGrupo(g) === 'sin-firmantes' ? 'Definir firmantes' : 'Ver grupo'}<span class="nxgov-sr-only"> ${esc(g.nombre)}</span></a></td></tr>`;
   }).join('');
   return `${aviso('info', 'Firma tus declaraciones por grupos', 'Cada carga crea su grupo de firma. Para armar uno a mano, selecciona declaraciones en borrador en la pestaña Declaraciones del periodo y elige «Crear grupo de firma».')}
-    <table class="app-table"><caption class="nxgov-sr-only">Grupos de firma</caption>
+    ${lista.length ? `<ul class="app-mlista app-solo-movil" role="list" aria-label="Grupos de firma">${movil}</ul>` : ''}
+    <table class="app-table ${lista.length ? 'app-solo-desk' : ''}"><caption class="nxgov-sr-only">Grupos de firma</caption>
     <thead><tr><th scope="col">Grupo</th><th scope="col" class="app-num">Declaraciones</th><th scope="col">Firmantes</th><th scope="col" class="app-num">Total a pagar</th><th scope="col">Estado</th><th scope="col">Acción</th></tr></thead>
     <tbody>${filas || '<tr><td colspan="6">Aún no hay grupos.</td></tr>'}</tbody></table>`;
 }

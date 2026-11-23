@@ -1,5 +1,5 @@
 /*
- * fonts.css — Nunito Sans y Work Sans (SIL OFL 1.1, ver assets/fonts/*/OFL.txt: conservar las licencias).
+ * fonts.css — Nunito Sans y Work Sans (SIL OFL 1.1, ver assets/fonts/<familia>/OFL.txt: conservar las licencias).
  * Work Sans (variable 100–900) se usa en navegación/paginador (Figma); el CDN GOV.CO v5 no la registra.
  * Se registra con el nombre "Nunito Sans" para no depender de los @font-face del CDN
  * (que usan nombres por peso: 'Nunito_Sans-Bold', etc.). Verdana es fuente del sistema.
