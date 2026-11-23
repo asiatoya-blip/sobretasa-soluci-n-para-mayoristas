@@ -1,0 +1,73 @@
+/*
+ * nxgov-tag — Átomo informativo (no interactivo). Figma: frame "Botones" de 22px, píldora, padding 0 12, Verdana 12.
+ * Colores: Kit UI 9.2 p.24 (decisión 2026-10-15; Figma incumplía AA) + "signed" azul informativo aprobado.
+ * Sustituye a .etiqueta-govco (v4, 25 !important); no reutiliza sus clases genéricas (.completado/.pendiente/.error).
+ *
+ * Variantes: --completed (verde) · --pending (amarillo) · --error (rojo) · --signed (azul informativo) · --neutral (gris)
+ * Mapa ICA (Figma "Etiqueta de estado"): Borrador → --neutral · Pendiente por declarar → --pending ·
+ * Aprobado → --signed · Pagado → --completed · Desestimado → --error.
+ */
+
+.nxgov-tag {
+  --nxgov-tag-fg: var(--nxgov-color-text-secondary);
+  --nxgov-tag-bg: var(--nxgov-color-bg-subtle);
+
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--nxgov-space-100);
+  min-height: var(--nxgov-size-tag-height);
+  max-width: 100%;
+  margin: 0;
+  padding: 0 var(--nxgov-space-300);
+  /* Borde transparente: visible solo en modo de alto contraste del sistema */
+  border: var(--nxgov-border-width) solid transparent;
+  border-radius: var(--nxgov-radius-pill);
+  background-color: var(--nxgov-tag-bg);
+  color: var(--nxgov-tag-fg);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-3);
+  font-weight: var(--nxgov-font-weight-regular);
+  line-height: var(--nxgov-font-line-height-base);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.nxgov-tag__icon {
+  flex: none;
+  width: var(--nxgov-size-icon-sm);
+  height: var(--nxgov-size-icon-sm);
+  fill: currentColor;
+}
+
+.nxgov-tag--completed {
+  --nxgov-tag-fg: var(--nxgov-tag-completed-fg);
+  --nxgov-tag-bg: var(--nxgov-tag-completed-bg);
+}
+
+.nxgov-tag--pending {
+  --nxgov-tag-fg: var(--nxgov-tag-pending-fg);
+  --nxgov-tag-bg: var(--nxgov-tag-pending-bg);
+}
+
+.nxgov-tag--error {
+  --nxgov-tag-fg: var(--nxgov-tag-error-fg);
+  --nxgov-tag-bg: var(--nxgov-tag-error-bg);
+}
+
+.nxgov-tag--signed {
+  --nxgov-tag-fg: var(--nxgov-tag-signed-fg);
+  --nxgov-tag-bg: var(--nxgov-tag-signed-bg);
+}
+
+.nxgov-tag--neutral {
+  --nxgov-tag-fg: var(--nxgov-tag-neutral-fg);
+  --nxgov-tag-bg: var(--nxgov-tag-neutral-bg);
+}
+
+@media (forced-colors: active) {
+  .nxgov-tag {
+    border-color: CanvasText;
+  }
+}

@@ -1,0 +1,84 @@
+/*
+ * nxgov-fieldset — Molécula: tarjeta que agrupa campos con un renglón/sección numerada (Figma "Card" 271:1544:
+ * borde Silver, radio 12, padding 24; badge "G1" Cobalt radio 12 Nunito 20 blanco; título H5 Nunito 20).
+ * Es un <fieldset> real: el lector antepone la leyenda ("G1 Declarante") al nombre de cada campo.
+ *
+ *   fieldset.nxgov-fieldset
+ *   ├── legend.nxgov-fieldset__legend > span.nxgov-fieldset__badge + span.nxgov-fieldset__title
+ *   └── div.nxgov-fieldset__body   (la grilla de campos la pone la página: .row/.col de Bootstrap)
+ *
+ * La leyenda se saca del borde (float) para que quede DENTRO de la tarjeta como en Figma (sin el hueco nativo).
+ */
+
+.nxgov-fieldset {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-600);
+  min-width: 0;
+  margin: 0;
+  padding: var(--nxgov-space-600);
+  border: var(--nxgov-border-width) solid var(--nxgov-color-border);
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-white);
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-fieldset *,
+.nxgov-fieldset *::before,
+.nxgov-fieldset *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-fieldset__legend {
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-600);
+  float: left; /* saca la leyenda del borde del fieldset */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h5);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-fieldset__legend + * {
+  clear: both;
+}
+
+.nxgov-fieldset__badge {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  padding: var(--nxgov-space-200) var(--nxgov-space-300);
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-primary);
+  color: var(--nxgov-color-white);
+}
+
+.nxgov-fieldset__title {
+  min-width: 0;
+}
+
+.nxgov-fieldset__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-600);
+  min-width: 0;
+}
+
+@media (max-width: 575px) {
+  .nxgov-fieldset {
+    padding: var(--nxgov-space-400);
+  }
+
+  .nxgov-fieldset__legend {
+    gap: var(--nxgov-space-400);
+    font-size: var(--nxgov-font-size-h6);
+  }
+}

@@ -1,0 +1,141 @@
+/*
+ * nxgov-wizard — Organismo: flujo por pasos (stepper + paneles + acciones). SOGAS "Nueva declaración"
+ * (Figma 44:1093 · 45:594 · 45:1323 · 46:2099 · 46:2628). Usa nxgov-stepper, nxgov-form y nxgov-table.
+ *
+ *   .nxgov-wizard-container   contenedor de página del flujo: reserva espacio inferior para el FAB fijo en <768px
+ *   .nxgov-wizard             stepper + paneles
+ *   .nxgov-wizard__panel      un paso (solo el actual visible; [hidden] en el resto). Contenedor sin marco (Figma:
+ *                             encabezado de sección + tarjetas/tabla + botones fuera de la tarjeta)
+ *   .nxgov-wizard__card       tarjeta con borde (Figma paso 1 "Periodo gravable" 44:1098, paso 4 46:2104)
+ *   .nxgov-wizard__actions    Atrás / Siguiente, alineados a la derecha fuera de la tarjeta (Figma 271:1583)
+ */
+
+/* Reserva para el FAB fijo (nxgov-fab--fixed) en móvil: alto del FAB móvil + su margen inferior y superior. */
+@media (max-width: 767px) {
+  .nxgov-wizard-container {
+    padding-bottom: calc(var(--nxgov-size-fab-mobile) + 2 * var(--nxgov-space-400));
+  }
+}
+
+.nxgov-wizard {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-800);
+  scroll-margin-top: var(--nxgov-space-600);
+}
+
+.nxgov-wizard *,
+.nxgov-wizard *::before,
+.nxgov-wizard *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-wizard__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-600);
+  min-width: 0;
+  animation: nxgov-wizard-panel-in var(--nxgov-motion-duration-normal) var(--nxgov-motion-easing-enter);
+}
+
+.nxgov-wizard__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-600);
+  min-width: 0;
+  font-family: var(--nxgov-font-family-body);
+  line-height: var(--nxgov-font-line-height-base);
+  padding: var(--nxgov-space-600);
+  border: var(--nxgov-border-width) solid var(--nxgov-color-border);
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-white);
+}
+
+.nxgov-wizard__panel[hidden] {
+  display: none;
+}
+
+@keyframes nxgov-wizard-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--nxgov-space-200));
+  }
+}
+
+.nxgov-wizard__header {
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-400);
+}
+
+/* Título del paso: recibe el foco al cambiar de paso (tabindex="-1"), sin anillo visual (no es interactivo) */
+.nxgov-wizard__title {
+  margin: 0;
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h4);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-wizard__title:focus {
+  outline: none;
+}
+
+.nxgov-wizard__title:focus-visible {
+  outline: var(--nxgov-focus-ring-width) dashed var(--nxgov-color-primary);
+  outline-offset: var(--nxgov-space-100);
+}
+
+/* Va junto al título dentro del encabezado del panel (no como hijo directo del panel) */
+.nxgov-wizard__description {
+  margin: var(--nxgov-space-100) 0 0;
+  color: var(--nxgov-color-text-secondary);
+  font-size: var(--nxgov-font-size-body-2);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-wizard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--nxgov-space-250);
+}
+
+.nxgov-wizard__actions-end {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nxgov-space-300);
+  margin-inline-start: auto;
+}
+
+@media (max-width: 767px) {
+  .nxgov-wizard__card {
+    padding: var(--nxgov-space-400);
+  }
+
+  .nxgov-wizard__title {
+    font-size: var(--nxgov-font-size-h5);
+  }
+
+  /* Acciones a ancho completo, la principal primero (pulgar) */
+  .nxgov-wizard__actions {
+    flex-direction: column-reverse;
+  }
+
+  .nxgov-wizard__actions .nxgov-button,
+  .nxgov-wizard__actions-end {
+    width: 100%;
+  }
+
+  .nxgov-wizard__actions-end {
+    flex-direction: column-reverse;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nxgov-wizard__panel {
+    animation: none;
+  }
+}

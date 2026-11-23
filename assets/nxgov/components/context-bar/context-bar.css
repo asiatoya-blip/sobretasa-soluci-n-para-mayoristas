@@ -1,0 +1,105 @@
+/*
+ * nxgov-context-bar — Molécula: cabecera de la zona del comercio en /ica/pagina-principal/
+ * (ICA, Figma "Contexto de comercio"). Responde al hallazgo "al entrar se pierde el comercio en el que estoy".
+ *
+ *   section.nxgov-context-bar [aria-labelledby → __title]
+ *   ├── span.__badge > svg.__icon                 (decorativo)
+ *   ├── div.__body > p.__eyebrow + h2.__title + p.__meta
+ *   └── a.nxgov-button.nxgov-button--outline.nxgov-context-bar__action   ("Cambiar comercio")
+ *
+ * Siempre visible encima de las declaraciones; el CMS la rellena con el comercio guardado en sesión.
+ */
+
+.nxgov-context-bar {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-400);
+  margin: 0;
+  padding: var(--nxgov-space-400) var(--nxgov-space-600);
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-primary-lighter);
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-2);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-context-bar *,
+.nxgov-context-bar *::before,
+.nxgov-context-bar *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-context-bar__badge {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: calc(2 * var(--nxgov-size-icon-md));
+  height: calc(2 * var(--nxgov-size-icon-md));
+  border-radius: var(--nxgov-radius-full);
+  background-color: var(--nxgov-color-white);
+  color: var(--nxgov-color-primary);
+}
+
+.nxgov-context-bar__icon {
+  width: var(--nxgov-size-icon-md);
+  height: var(--nxgov-size-icon-md);
+  fill: currentColor;
+}
+
+.nxgov-context-bar__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--nxgov-space-050);
+  min-width: 0;
+}
+
+.nxgov-context-bar__eyebrow {
+  margin: 0;
+  color: var(--nxgov-color-text-secondary);
+  font-size: var(--nxgov-font-size-body-3);
+}
+
+/* Encabezado propio: no hereda el h2 global del CDN v5 */
+.nxgov-context-bar__title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h4);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+  overflow-wrap: anywhere;
+}
+
+.nxgov-context-bar__meta {
+  margin: 0;
+  color: var(--nxgov-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.nxgov-context-bar__action {
+  flex: none;
+}
+
+@media (max-width: 767px) {
+  .nxgov-context-bar {
+    flex-wrap: wrap;
+    padding: var(--nxgov-space-400);
+  }
+
+  .nxgov-context-bar__body {
+    flex-basis: calc(100% - 2 * var(--nxgov-size-icon-md) - var(--nxgov-space-400));
+  }
+
+  .nxgov-context-bar__action {
+    flex: 1 1 100%;
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-context-bar {
+    border: var(--nxgov-border-width) solid CanvasText;
+  }
+}

@@ -1,0 +1,9 @@
+# Notas internas: auditoría del portal del cliente y memoria de trabajo (no publicar)
+CLAUDE.md
+contexto/
+
+# Sistema
+node_modules/
+.DS_Store
+Thumbs.db
+~$*.xlsx

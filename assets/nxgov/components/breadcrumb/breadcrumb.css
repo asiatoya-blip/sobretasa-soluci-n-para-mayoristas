@@ -1,0 +1,84 @@
+/*
+ * nxgov-breadcrumb — Molécula: miga de pan (Figma "Miga de pan" 35:361: Verdana 12, enlaces Cobalt con padding 0 12px,
+ * separador chevron 14px negro, elemento actual en negro). Sustituye a .breadcrumb-govco del CDN v5
+ * (typo "invested", font-weight inválido, sin foco visible, <ul> en lugar de <ol>).
+ *
+ *   nav.nxgov-breadcrumb[aria-label="Miga de pan"]
+ *   └── ol.nxgov-breadcrumb__list
+ *       ├── li.nxgov-breadcrumb__item > a.nxgov-breadcrumb__link
+ *       │   + svg.nxgov-breadcrumb__separator[aria-hidden]   (dentro del li, después del enlace)
+ *       └── li.nxgov-breadcrumb__item > span.nxgov-breadcrumb__current[aria-current="page"]
+ */
+
+.nxgov-breadcrumb {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-3);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-breadcrumb *,
+.nxgov-breadcrumb *::before,
+.nxgov-breadcrumb *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--nxgov-space-100) 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nxgov-breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--nxgov-space-300);
+  margin: 0 var(--nxgov-space-300) 0 0;
+  padding: 0;
+}
+
+.nxgov-breadcrumb__item:last-child {
+  margin-right: 0;
+}
+
+.nxgov-breadcrumb__link,
+.nxgov-breadcrumb__current {
+  padding: 0 var(--nxgov-space-300);
+}
+
+.nxgov-breadcrumb__link {
+  border-radius: var(--nxgov-radius-alert);
+  color: var(--nxgov-color-primary);
+  text-decoration: none;
+}
+
+.nxgov-breadcrumb__link:hover {
+  text-decoration: underline;
+  text-underline-offset: var(--nxgov-space-050);
+}
+
+.nxgov-breadcrumb__link:focus {
+  outline: none;
+}
+
+.nxgov-breadcrumb__link:focus-visible {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-offset);
+}
+
+.nxgov-breadcrumb__current {
+  color: var(--nxgov-color-black);
+}
+
+.nxgov-breadcrumb__separator {
+  flex: none;
+  width: var(--nxgov-size-icon-compact);
+  height: var(--nxgov-size-icon-compact);
+  color: var(--nxgov-color-black);
+  fill: currentColor;
+}

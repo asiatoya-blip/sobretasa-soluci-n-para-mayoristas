@@ -1,0 +1,81 @@
+/*
+ * nxgov-section-heading — Molécula: encabezado de sección con ícono circular, título y descripción.
+ * Figma 271:1539 ("Sección G: Firmas") y encabezados de los pasos del wizard (44:1093 "Periodo gravable",
+ * 46:2099 "Sección H: …"): círculo Cobalt 42px con ícono blanco 18px, título H3 Nunito 26 Cobalt, descripción Body 2.
+ *
+ *   div.nxgov-section-heading
+ *   ├── span.nxgov-section-heading__icon[aria-hidden] > svg.nxgov-section-heading__glyph
+ *   └── div.nxgov-section-heading__text
+ *       ├── h1|h2.nxgov-section-heading__title  (tabindex="-1" si recibe el foco al cambiar de vista/paso)
+ *       └── p.nxgov-section-heading__description
+ */
+
+.nxgov-section-heading {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-600);
+  margin: 0;
+  padding-block: var(--nxgov-space-300);
+  font-family: var(--nxgov-font-family-body);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-section-heading *,
+.nxgov-section-heading *::before,
+.nxgov-section-heading *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-section-heading__icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--nxgov-size-control-height);
+  height: var(--nxgov-size-control-height);
+  border-radius: var(--nxgov-radius-full);
+  background-color: var(--nxgov-color-primary);
+  color: var(--nxgov-color-white);
+}
+
+.nxgov-section-heading__glyph {
+  width: var(--nxgov-size-icon-sm);
+  height: var(--nxgov-size-icon-sm);
+  fill: currentColor;
+}
+
+.nxgov-section-heading__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nxgov-section-heading__title {
+  margin: 0;
+  color: var(--nxgov-color-primary);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h3);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-section-heading__title:focus {
+  outline: none;
+}
+
+.nxgov-section-heading__description {
+  margin: 0;
+  color: var(--nxgov-color-black);
+  font-size: var(--nxgov-font-size-body-2);
+}
+
+@media (max-width: 575px) {
+  .nxgov-section-heading {
+    align-items: flex-start;
+    gap: var(--nxgov-space-400);
+  }
+
+  .nxgov-section-heading__title {
+    font-size: var(--nxgov-font-size-h4);
+  }
+}

@@ -1,0 +1,172 @@
+/*
+ * nxgov-modal — Organismo: diálogo modal centrado. Figma "Alerta modal" 232:4164 (536px, padding 40/56, gap 24,
+ * ícono 70px, título Nunito Bold 34 centrado, texto Verdana 15, botón contorno a todo el ancho).
+ * Sustituye a .modal-container-govco del CDN v5 (57 !important, sin overlay ni focus trap, aria-hidden en el diálogo
+ * visible). Conserva sus variantes: Confirmación (--info) · Éxito (--success) · Error (--danger) · Advertencia (--warning).
+ *
+ * Base: <dialog> + showModal() (capa superior, ::backdrop, fondo inerte). Animación fade + escala con tokens de motion.
+ *
+ *   dialog.nxgov-modal.nxgov-modal--<variante> [aria-labelledby → __title, aria-describedby → __message]
+ *   └── div.nxgov-modal__panel
+ *       ├── svg.nxgov-modal__icon[aria-hidden]
+ *       ├── h2.nxgov-modal__title
+ *       ├── div.nxgov-modal__message
+ *       └── div.nxgov-modal__actions > button.nxgov-button … .nxgov-modal__action [data-nxgov-modal-close="valor"]
+ *
+ * Color del título por variante (texto grande ≥24px → AA 3:1): success #158361 4.65:1 · info Cobalt 8.46:1 ·
+ * danger #A80521 7.75:1 · warning: Figma/CDN #FDAA29 1.9:1 falla → título negro; el amarillo queda solo en el ícono.
+ */
+
+.nxgov-modal {
+  --nxgov-modal-accent: var(--nxgov-color-primary);
+  --nxgov-modal-title: var(--nxgov-color-primary);
+
+  box-sizing: border-box;
+  width: min(var(--nxgov-size-modal), calc(100vw - 2 * var(--nxgov-space-400)));
+  max-width: none;
+  max-height: calc(100dvh - 2 * var(--nxgov-space-400));
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-white);
+  box-shadow: var(--nxgov-overlay-shadow);
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-1);
+  line-height: var(--nxgov-font-line-height-base);
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity var(--nxgov-motion-duration-normal) var(--nxgov-motion-easing-exit),
+    transform var(--nxgov-motion-duration-normal) var(--nxgov-motion-easing-exit);
+}
+
+.nxgov-modal *,
+.nxgov-modal *::before,
+.nxgov-modal *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-modal.nxgov-is-open {
+  opacity: 1;
+  transform: scale(1);
+  transition-timing-function: var(--nxgov-motion-easing-enter);
+}
+
+/* ::backdrop no hereda custom properties en todos los navegadores → fallbacks literales */
+.nxgov-modal::backdrop {
+  background-color: var(--nxgov-overlay-backdrop, rgba(28, 35, 40, 0.67));
+  opacity: 0;
+  transition: opacity var(--nxgov-motion-duration-normal, 250ms) ease;
+}
+
+.nxgov-modal.nxgov-is-open::backdrop {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nxgov-modal::backdrop {
+    transition: none;
+  }
+}
+
+.nxgov-modal--success {
+  --nxgov-modal-accent: var(--nxgov-color-success);
+  --nxgov-modal-title: var(--nxgov-color-success);
+}
+
+.nxgov-modal--danger {
+  --nxgov-modal-accent: var(--nxgov-color-danger);
+  --nxgov-modal-title: var(--nxgov-color-danger);
+}
+
+.nxgov-modal--warning {
+  --nxgov-modal-accent: var(--nxgov-color-warning);
+  --nxgov-modal-title: var(--nxgov-color-black);
+}
+
+.nxgov-modal__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--nxgov-space-600);
+  max-height: inherit;
+  padding: var(--nxgov-space-1000) var(--nxgov-space-1400);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  text-align: center;
+}
+
+.nxgov-modal__icon {
+  flex: none;
+  width: var(--nxgov-size-icon-xl);
+  height: var(--nxgov-size-icon-xl);
+  color: var(--nxgov-modal-accent);
+  fill: currentColor;
+}
+
+.nxgov-modal__title {
+  margin: 0;
+  color: var(--nxgov-modal-title);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h2);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+  text-wrap: balance;
+}
+
+/* Recibe el foco cuando el modal no tiene un control más adecuado (tabindex="-1"): sin anillo, no es interactivo */
+.nxgov-modal__title:focus {
+  outline: none;
+}
+
+.nxgov-modal__message {
+  width: 100%;
+  margin: 0;
+  color: var(--nxgov-color-black);
+  font-size: var(--nxgov-font-size-body-1);
+}
+
+.nxgov-modal__message > * {
+  margin: 0;
+}
+
+.nxgov-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nxgov-space-600);
+  width: 100%;
+}
+
+.nxgov-modal__action {
+  flex: 1 1 0;
+  min-width: max-content;
+}
+
+@media (max-width: 575px) {
+  .nxgov-modal__panel {
+    padding: var(--nxgov-space-800) var(--nxgov-space-600);
+  }
+
+  .nxgov-modal__title {
+    font-size: var(--nxgov-font-size-h4);
+  }
+
+  .nxgov-modal__icon {
+    width: var(--nxgov-size-fab-mobile);
+    height: var(--nxgov-size-fab-mobile);
+  }
+
+  .nxgov-modal__actions {
+    flex-direction: column;
+    gap: var(--nxgov-space-300);
+  }
+
+  .nxgov-modal__action {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+}

@@ -1,0 +1,42 @@
+/*
+ * nxgov.css — Punto de entrada de la librería nxgov (Sogas CMS).
+ * Orden: 1) tokens (:root)  2) base  3) utilidades globales  4) átomos  5) moléculas.
+ * Cargar DESPUÉS del CDN GOV.CO v5 / Bootstrap si conviven en la página.
+ */
+@import url("tokens/nxgov-tokens.css");
+@import url("base/fonts.css");
+@import url("../utils/css/nxgov-utilities.css");
+
+/* Átomos */
+@import url("../components/button/button.css");
+@import url("../components/tag/tag.css");
+@import url("../components/fab/fab.css");
+
+/* Moléculas */
+@import url("../components/alert/alert.css");
+@import url("../components/form/form.css");
+@import url("../components/notification/notification.css");
+@import url("../components/summary/summary.css");
+@import url("../components/help/help.css");
+@import url("../components/section-heading/section-heading.css");
+@import url("../components/fieldset/fieldset.css");
+@import url("../components/segmented/segmented.css");
+@import url("../components/breadcrumb/breadcrumb.css");
+@import url("../components/search/search.css");
+@import url("../components/pagination/pagination.css");
+@import url("../components/declaration-list-item/declaration-list-item.css");
+@import url("../components/entity-card/entity-card.css");
+@import url("../components/context-bar/context-bar.css");
+@import url("../components/empty-state/empty-state.css");
+@import url("../components/file-upload/file-upload.css");
+
+/* Organismos */
+@import url("../components/declaration-list/declaration-list.css");
+@import url("../components/filters/filters.css");
+@import url("../components/flyout/flyout.css");
+@import url("../components/modal/modal.css");
+@import url("../components/stepper/stepper.css");
+@import url("../components/tabs/tabs.css");
+@import url("../components/table/table.css");
+@import url("../components/wizard/wizard.css");
+@import url("../components/signature/signature.css");

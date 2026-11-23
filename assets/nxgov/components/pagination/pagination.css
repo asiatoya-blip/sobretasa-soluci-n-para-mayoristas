@@ -1,0 +1,105 @@
+/*
+ * nxgov-pagination — Molécula: paginador (Figma "Paginador" 228:1938: "Anterior · 1 2 3 · Siguiente", Work Sans Medium,
+ * página actual 40×40 con fondo y radio 4px). Figma usa la paleta v4 (#3366CC / #0B457F) → Cobalt (Kit 9.2).
+ * Lógica migrada de CDN v4 paginacion.js (ventana: primera/última, actual ±1, elipsis) en pagination.js.
+ *
+ *   nav.nxgov-pagination[aria-label="Paginación de …"]
+ *   └── ul.nxgov-pagination__list
+ *       ├── li > a.nxgov-pagination__link.nxgov-pagination__link--step  "Anterior" (aria-disabled en la primera)
+ *       ├── li > a.nxgov-pagination__link[aria-current="page"]           página actual
+ *       ├── li > span.nxgov-pagination__ellipsis[aria-hidden]            …
+ *       └── li > a.nxgov-pagination__link.nxgov-pagination__link--step  "Siguiente"
+ */
+
+.nxgov-pagination {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  font-family: var(--nxgov-font-family-nav);
+  font-weight: var(--nxgov-font-weight-medium);
+}
+
+.nxgov-pagination *,
+.nxgov-pagination *::before,
+.nxgov-pagination *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--nxgov-space-200);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nxgov-pagination__list > li {
+  margin: 0;
+  padding: 0;
+}
+
+.nxgov-pagination__link,
+.nxgov-pagination__ellipsis {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--nxgov-size-pagination);
+  height: var(--nxgov-size-pagination);
+  padding: 0 var(--nxgov-space-200);
+  border-radius: var(--nxgov-radius-pagination);
+  color: var(--nxgov-color-primary);
+  font-size: var(--nxgov-font-size-h6);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.nxgov-pagination__link {
+  cursor: pointer;
+  transition:
+    background-color var(--nxgov-transition-fast),
+    color var(--nxgov-transition-fast);
+}
+
+.nxgov-pagination__link--step {
+  font-size: var(--nxgov-font-size-nav);
+}
+
+.nxgov-pagination__link:hover {
+  background-color: var(--nxgov-color-primary-lighter);
+  text-decoration: underline;
+}
+
+.nxgov-pagination__link[aria-current="page"] {
+  background-color: var(--nxgov-color-primary);
+  color: var(--nxgov-color-white);
+  text-decoration: none;
+  cursor: default;
+}
+
+.nxgov-pagination__link[aria-disabled="true"] {
+  color: var(--nxgov-color-text-secondary);
+  background-color: transparent;
+  text-decoration: none;
+  cursor: default;
+}
+
+.nxgov-pagination__link:focus {
+  outline: none;
+}
+
+.nxgov-pagination__link:focus-visible {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-offset);
+}
+
+.nxgov-pagination__ellipsis {
+  min-width: auto;
+  color: var(--nxgov-color-text-secondary);
+}
+
+.nxgov-pagination[hidden] {
+  display: none;
+}

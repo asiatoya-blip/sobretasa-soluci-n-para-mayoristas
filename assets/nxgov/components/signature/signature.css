@@ -1,0 +1,51 @@
+/*
+ * nxgov-signature — Organismo: pantalla de firmas (Figma 46:2628 antes de verificar · 271:1531 verificado).
+ * Compone nxgov-section-heading + nxgov-fieldset (G1/G2) + nxgov-segmented + nxgov-field + nxgov-alert + nxgov-button.
+ * Estado en data-nxgov-signature-state: idle | verifying | verified | signing | signed (lo gestiona signature.js).
+ */
+
+.nxgov-signature {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-600);
+  min-width: 0;
+}
+
+.nxgov-signature *,
+.nxgov-signature *::before,
+.nxgov-signature *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-signature__alerts:empty {
+  display: none;
+}
+
+/* "Verificar" alineado al inicio dentro de la tarjeta (Figma 46:2628) */
+.nxgov-signature__verify {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.nxgov-signature__verify[hidden] {
+  display: none;
+}
+
+/* Atrás / Firmar a la derecha (Figma 271:1583, gap 10px) */
+.nxgov-signature__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--nxgov-space-250);
+}
+
+@media (max-width: 575px) {
+  .nxgov-signature__actions {
+    flex-direction: column-reverse;
+  }
+
+  .nxgov-signature__actions > * {
+    width: 100%;
+  }
+}

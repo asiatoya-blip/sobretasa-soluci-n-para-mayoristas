@@ -1,0 +1,115 @@
+/*
+ * nxgov-summary — Molécula: tarjeta lateral "Resumen de la declaración" (Figma "Content - resumen" 239:2180 paso 4,
+ * 239:2289 firmas). Lista de renglones numerados con su valor; el último es el total.
+ *
+ *   section.nxgov-summary [aria-labelledby → __title]
+ *   ├── h2|h3.nxgov-summary__title
+ *   └── dl.nxgov-summary__list
+ *       └── div.nxgov-summary__item(--penalty | --total)
+ *           ├── dt.nxgov-summary__label > span.nxgov-summary__number[aria-hidden] + sr-only "Renglón N: " + texto
+ *           └── dd.nxgov-summary__value > data[value]
+ *
+ * Divisores (Figma): punteado gris entre renglones; línea negra continua antes del total.
+ * --penalty: badge amarillo (sanciones/intereses). Figma #9D7700 sobre #FEE697 = 3.35:1 → Kit #806000 (4.73:1).
+ * Sin aria-live: los totales ya se anuncian desde la tabla de liquidación; repetirlos aquí duplicaría la lectura.
+ */
+
+.nxgov-summary {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-600);
+  margin: 0;
+  padding: var(--nxgov-space-600);
+  overflow: hidden;
+  border: var(--nxgov-border-width) solid var(--nxgov-color-border-subtle);
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-bg-subtle);
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-3);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-summary *,
+.nxgov-summary *::before,
+.nxgov-summary *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-summary[hidden] {
+  display: none;
+}
+
+.nxgov-summary__title {
+  margin: 0;
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h6);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-summary__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.nxgov-summary__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--nxgov-space-200);
+  padding-block: var(--nxgov-space-300);
+}
+
+.nxgov-summary__item + .nxgov-summary__item {
+  border-top: var(--nxgov-border-width) dashed var(--nxgov-color-grey);
+}
+
+.nxgov-summary__item + .nxgov-summary__item--total {
+  border-top-style: solid;
+  border-top-color: var(--nxgov-color-black);
+}
+
+.nxgov-summary__label {
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-200);
+  min-width: 0;
+  margin: 0;
+  color: var(--nxgov-color-text-secondary);
+  font-weight: var(--nxgov-font-weight-regular);
+}
+
+.nxgov-summary__number {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-width: var(--nxgov-size-number-badge-sm);
+  height: var(--nxgov-size-number-badge-sm);
+  border-radius: var(--nxgov-radius-badge-sm);
+  background-color: var(--nxgov-color-primary);
+  color: var(--nxgov-color-white);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-badge-sm);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: 1;
+}
+
+.nxgov-summary__item--penalty .nxgov-summary__number {
+  background-color: var(--nxgov-color-yellow-light);
+  color: var(--nxgov-tag-pending-fg);
+}
+
+.nxgov-summary__value {
+  margin: 0 0 0 auto;
+  color: var(--nxgov-color-black);
+  font-weight: var(--nxgov-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}

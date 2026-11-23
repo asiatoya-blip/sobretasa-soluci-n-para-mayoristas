@@ -1,0 +1,208 @@
+/*
+ * nxgov-alert — Molécula (ícono + mensaje + cerrar). Figma: "Alerta de notificación" 45:1160 (info) y 271:1788 (success).
+ * Sustituye a .container-alerta-govco/.alerta-govco del CDN v5 (30 !important, max-height 48px que recorta texto,
+ * clases genéricas .info/.success/.error, sin variante warning, cierre sin nombre accesible).
+ *
+ * Variantes: --info · --success · --warning (nueva) · --danger
+ * Roles (en el HTML, no en CSS): danger → role="alert" · warning → role="alert" si bloquea, si no "status"
+ *                                 info/success → role="status"
+ */
+
+.nxgov-alert {
+  --nxgov-alert-fg: var(--nxgov-alert-info-fg);
+  --nxgov-alert-bg: var(--nxgov-alert-info-bg);
+  --nxgov-alert-border: var(--nxgov-alert-info-border);
+
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-300);
+  width: 100%;
+  margin: 0;
+  padding: var(--nxgov-space-200) var(--nxgov-space-400);
+  border: var(--nxgov-border-width) solid var(--nxgov-alert-border);
+  border-radius: var(--nxgov-radius-alert);
+  background-color: var(--nxgov-alert-bg);
+  color: var(--nxgov-alert-fg);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-2);
+  line-height: var(--nxgov-font-line-height-base);
+  text-align: left;
+}
+
+.nxgov-alert *,
+.nxgov-alert *::before,
+.nxgov-alert *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-alert__icon {
+  flex: none;
+  width: var(--nxgov-size-icon-md);
+  height: var(--nxgov-size-icon-md);
+  fill: currentColor;
+}
+
+.nxgov-alert__content {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* Figma: el texto lleva 5px de aire vertical propio */
+  padding-block: var(--nxgov-space-100);
+}
+
+.nxgov-alert__title,
+.nxgov-alert__message {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: inherit;
+  font: inherit;
+}
+
+.nxgov-alert__title {
+  font-weight: var(--nxgov-font-weight-bold);
+}
+
+/* Enlace contextual (CDN: Verdana-Bold subrayado, mismo color que el texto) */
+.nxgov-alert__link {
+  border-radius: var(--nxgov-radius-alert);
+  color: inherit;
+  font-weight: var(--nxgov-font-weight-bold);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.nxgov-alert__link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.nxgov-alert__link:focus-visible {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-offset);
+}
+
+/* Botón cerrar: ícono de 16px (Figma) dentro de un área táctil de 32px */
+.nxgov-alert__close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--nxgov-space-800);
+  height: var(--nxgov-space-800);
+  margin: calc(-1 * var(--nxgov-space-100)) calc(-1 * var(--nxgov-space-200)) calc(-1 * var(--nxgov-space-100)) 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--nxgov-radius-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+  transition: background-color var(--nxgov-motion-duration-fast) ease-in-out;
+}
+
+.nxgov-alert__close-icon {
+  width: var(--nxgov-space-400);
+  height: var(--nxgov-space-400);
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.nxgov-alert__close:hover {
+  background-color: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.nxgov-alert__close:focus {
+  outline: none;
+}
+
+.nxgov-alert__close:focus-visible {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: 0;
+}
+
+/* ---------- Variantes ---------- */
+.nxgov-alert--info {
+  --nxgov-alert-fg: var(--nxgov-alert-info-fg);
+  --nxgov-alert-bg: var(--nxgov-alert-info-bg);
+  --nxgov-alert-border: var(--nxgov-alert-info-border);
+}
+
+.nxgov-alert--success {
+  --nxgov-alert-fg: var(--nxgov-alert-success-fg);
+  --nxgov-alert-bg: var(--nxgov-alert-success-bg);
+  --nxgov-alert-border: var(--nxgov-alert-success-border);
+}
+
+.nxgov-alert--warning {
+  --nxgov-alert-fg: var(--nxgov-alert-warning-fg);
+  --nxgov-alert-bg: var(--nxgov-alert-warning-bg);
+  --nxgov-alert-border: var(--nxgov-alert-warning-border);
+}
+
+.nxgov-alert--danger {
+  --nxgov-alert-fg: var(--nxgov-alert-danger-fg);
+  --nxgov-alert-bg: var(--nxgov-alert-danger-bg);
+  --nxgov-alert-border: var(--nxgov-alert-danger-border);
+}
+
+/* ---------- Animaciones ----------
+   Entrada solo para alertas inyectadas (nxgov.alert.show añade .nxgov-is-entering); las del HTML inicial no animan.
+   Salida: fade + colapso de altura para que el contenido inferior suba suavemente en lugar de saltar.
+   Con prefers-reduced-motion las duraciones son 0ms (tokens) y el JS elimina sin esperar. */
+.nxgov-alert.nxgov-is-entering {
+  animation: nxgov-alert-in var(--nxgov-motion-duration-normal) var(--nxgov-motion-easing-enter) both;
+}
+
+.nxgov-alert.nxgov-is-leaving {
+  overflow: hidden;
+  animation: nxgov-alert-out var(--nxgov-motion-duration-normal) var(--nxgov-motion-easing-exit) both;
+  pointer-events: none;
+}
+
+@keyframes nxgov-alert-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--nxgov-space-200)));
+  }
+}
+
+@keyframes nxgov-alert-out {
+  from {
+    max-height: var(--nxgov-alert-height, 200px);
+  }
+  to {
+    max-height: 0;
+    margin-block: 0;
+    padding-block: 0;
+    border-width: 0;
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--nxgov-space-200)));
+  }
+}
+
+/* Pila de alertas (región de anuncios gestionada por nxgov.alert.show) */
+.nxgov-alert-region {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-300);
+}
+
+.nxgov-alert-region:empty {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nxgov-alert__close {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-alert {
+    border-color: CanvasText;
+  }
+
+  .nxgov-alert__close:focus-visible,
+  .nxgov-alert__link:focus-visible {
+    outline-color: Highlight;
+  }
+}

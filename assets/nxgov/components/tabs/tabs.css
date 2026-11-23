@@ -1,0 +1,116 @@
+/*
+ * nxgov-tabs — Organismo: pestañas WAI-ARIA (ICA zona del comercio: "Declaración en curso" / "Historial (n)").
+ * Reemplaza los botones grandes "Mi declaración / Mi historial" del CMS y la pestaña v4 (sin roles, 34 !important).
+ *
+ *   div.nxgov-tabs [data-nxgov-component="tabs"]
+ *   ├── div.nxgov-tabs__list [role=tablist, aria-label]
+ *   │   └── button.nxgov-tabs__tab [role=tab, aria-selected, aria-controls, tabindex] > svg.__icon + span.__label
+ *   └── div.nxgov-tabs__panel [role=tabpanel, aria-labelledby, tabindex=0, hidden]
+ *
+ * Activa: texto Cobalt en negrita + subrayado de 3px (no solo color). Comportamiento en tabs.js.
+ */
+
+.nxgov-tabs {
+  box-sizing: border-box;
+  margin: 0;
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-1);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-tabs *,
+.nxgov-tabs *::before,
+.nxgov-tabs *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-tabs__list {
+  display: flex;
+  gap: var(--nxgov-space-200);
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  border-bottom: var(--nxgov-border-width) solid var(--nxgov-color-border);
+  scrollbar-width: thin;
+}
+
+.nxgov-tabs__tab {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--nxgov-space-200);
+  margin: 0;
+  padding: var(--nxgov-space-300) var(--nxgov-space-400);
+  border: 0;
+  border-bottom: calc(3 * var(--nxgov-border-width)) solid transparent;
+  background: none;
+  color: var(--nxgov-color-text-secondary);
+  font: inherit;
+  cursor: pointer;
+  appearance: none;
+  transition:
+    color var(--nxgov-transition-fast),
+    border-color var(--nxgov-transition-fast),
+    background-color var(--nxgov-transition-fast);
+}
+
+.nxgov-tabs__tab:hover {
+  background-color: var(--nxgov-color-primary-lighter);
+  color: var(--nxgov-color-primary);
+}
+
+.nxgov-tabs__tab[aria-selected="true"] {
+  border-bottom-color: var(--nxgov-color-primary);
+  color: var(--nxgov-color-primary);
+  font-weight: var(--nxgov-font-weight-bold);
+}
+
+.nxgov-tabs__tab:focus {
+  outline: none;
+}
+
+.nxgov-tabs__tab:focus-visible {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: calc(-1 * var(--nxgov-focus-ring-width));
+}
+
+.nxgov-tabs__icon {
+  flex: none;
+  width: var(--nxgov-size-icon-sm);
+  height: var(--nxgov-size-icon-sm);
+  fill: currentColor;
+}
+
+.nxgov-tabs__panel {
+  padding-top: var(--nxgov-space-600);
+}
+
+.nxgov-tabs__panel:focus {
+  outline: none;
+}
+
+.nxgov-tabs__panel:focus-visible {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-offset);
+}
+
+@media (max-width: 480px) {
+  .nxgov-tabs__tab {
+    flex: 1 1 0;
+    justify-content: center;
+    padding-inline: var(--nxgov-space-200);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nxgov-tabs__tab {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-tabs__tab[aria-selected="true"] {
+    border-bottom-color: Highlight;
+  }
+}

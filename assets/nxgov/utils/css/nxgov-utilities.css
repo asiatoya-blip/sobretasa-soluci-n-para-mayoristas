@@ -1,0 +1,60 @@
+/*
+ * nxgov-utilities.css — Capa GLOBAL del CMS (ver CLAUDE.md › Riesgos de Colisión › A. Globales).
+ * Única capa permitida fuera de un bloque. Reemplaza utilidades genéricas de Bootstrap/CDN
+ * (.visually-hidden, .container-fluid, .active, .disabled…) por equivalentes con prefijo nxgov-.
+ */
+
+/* Oculto visualmente, disponible para lectores de pantalla. */
+.nxgov-sr-only {
+  position: absolute !important; /* única excepción: debe ganar a cualquier estilo del contexto */
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Variante que se hace visible al recibir foco (p. ej. enlaces "Saltar al contenido"). */
+.nxgov-sr-only--focusable:focus,
+.nxgov-sr-only--focusable:focus-within {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+}
+
+/* Contenedor de página alineado a la grilla de Figma (1280 + márgenes de 80px). */
+.nxgov-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--nxgov-size-container-max) + 2 * var(--nxgov-size-gutter-page));
+  margin-inline: auto;
+  padding-inline: var(--nxgov-size-gutter-page);
+}
+
+@media (max-width: 767px) {
+  .nxgov-container {
+    padding-inline: var(--nxgov-space-400);
+  }
+}
+
+/* Estado global: oculto para todos (equivale a [hidden] pero resistente a display de terceros). */
+.nxgov-is-hidden {
+  display: none !important;
+}
+
+/* Bloqueo de scroll de la página mientras hay un overlay abierto (flyout/modal).
+   El JS compensa el ancho de la barra de desplazamiento con --nxgov-scrollbar-width para evitar saltos de layout. */
+.nxgov-scroll-locked {
+  overflow: hidden;
+}
+
+.nxgov-scroll-locked body {
+  padding-right: var(--nxgov-scrollbar-width, 0px);
+}

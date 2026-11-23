@@ -1,0 +1,103 @@
+/*
+ * nxgov-declaration-list — Organismo. Figma: cabecera "Titulos" 42:1687 + contenedor "Items" 39:544.
+ * Contiene N moléculas nxgov-declaration-list-item. Solo define el contenedor, la cabecera de columnas
+ * y el ritmo vertical entre filas; no toca el interior de las moléculas.
+ *
+ * Anatomía:
+ *   div.nxgov-declaration-list
+ *   ├── div.__header[aria-hidden]   rótulos visuales de columna (la semántica la aportan los <dt> de cada fila)
+ *   ├── ul.__items[role=list]       fondo gris, padding 24, gap 24, esquinas superiores 24
+ *   │   └── li.__item > article.nxgov-declaration-list-item
+ *   └── p.__empty                   mensaje cuando no hay declaraciones (opcional)
+ */
+
+.nxgov-declaration-list,
+.nxgov-declaration-list__header,
+.nxgov-declaration-list__items,
+.nxgov-declaration-list__item {
+  box-sizing: border-box;
+}
+
+.nxgov-declaration-list {
+  /* Sangría de la cabecera = padding de la lista + borde de la tarjeta + padding del resumen,
+     para que cada rótulo caiga exactamente sobre su columna. */
+  --nxgov-declaration-list-header-inset: calc(
+    var(--nxgov-space-600) + var(--nxgov-border-width) + var(--nxgov-space-300)
+  );
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  color: var(--nxgov-color-black);
+}
+
+/* ---------- Cabecera de columnas ---------- */
+.nxgov-declaration-list__header {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--nxgov-space-300);
+  padding: var(--nxgov-space-300) var(--nxgov-declaration-list-header-inset);
+  border-bottom: var(--nxgov-border-width) solid var(--nxgov-color-border);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h6);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-declaration-list__column {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Lista ---------- */
+.nxgov-declaration-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-600);
+  margin: 0;
+  padding: var(--nxgov-space-600);
+  list-style: none;
+  border-radius: var(--nxgov-radius-list) var(--nxgov-radius-list) 0 0;
+  background-color: var(--nxgov-color-overlay-list);
+}
+
+.nxgov-declaration-list__item {
+  margin: 0;
+  padding: 0;
+}
+
+.nxgov-declaration-list__item::marker {
+  content: none;
+}
+
+.nxgov-declaration-list__empty {
+  margin: 0;
+  padding: var(--nxgov-space-600);
+  color: var(--nxgov-color-text-secondary);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-1);
+  line-height: var(--nxgov-font-line-height-base);
+  text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+/* ≤991px la molécula cambia de grilla y muestra sus propios rótulos → la cabecera sobra. */
+@media (max-width: 991px) {
+  .nxgov-declaration-list__header {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .nxgov-declaration-list__items {
+    gap: var(--nxgov-space-400);
+    padding: var(--nxgov-space-400);
+    border-radius: var(--nxgov-radius-card) var(--nxgov-radius-card) 0 0;
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-declaration-list__items {
+    border: var(--nxgov-border-width) solid CanvasText;
+  }
+}

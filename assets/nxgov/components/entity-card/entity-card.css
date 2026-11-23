@@ -1,0 +1,170 @@
+/*
+ * nxgov-entity-card — Molécula: tarjeta de comercio para "Seleccionar comercio" (ICA, Figma "Card de comercio").
+ * Reemplaza la card del CMS que escondía teléfono, responsable y el botón SELECCIONAR detrás de :hover.
+ *
+ *   article.nxgov-entity-card [aria-labelledby → __title]
+ *   ├── div.nxgov-entity-card__body
+ *   │   ├── div.__header > svg.__icon + h3.__title + p.__status (texto + nxgov-tag)
+ *   │   └── dl.__details > div.__field > dt.__label + dd.__value   (NIT, código, dirección, teléfono, responsable)
+ *   └── .nxgov-button.nxgov-button--primary.nxgov-entity-card__action   ("Ingresar")
+ *
+ * Toda la tarjeta es clicable: el ::after del botón cubre la tarjeta (sin anidar controles), y el foco del botón
+ * dibuja el anillo en la tarjeta completa (:focus-within). Nada se oculta tras :hover.
+ */
+
+/* Lista contenedora */
+.nxgov-entity-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-400);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nxgov-entity-card {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-600);
+  margin: 0;
+  padding: var(--nxgov-space-600);
+  border: var(--nxgov-border-width) solid var(--nxgov-color-border-subtle);
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-white);
+  box-shadow: var(--nxgov-shadow-card);
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-2);
+  line-height: var(--nxgov-font-line-height-base);
+  transition:
+    border-color var(--nxgov-transition-fast),
+    box-shadow var(--nxgov-transition-fast);
+}
+
+.nxgov-entity-card *,
+.nxgov-entity-card *::before,
+.nxgov-entity-card *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-entity-card:hover {
+  border-color: var(--nxgov-color-primary);
+}
+
+.nxgov-entity-card:focus-within {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-offset);
+}
+
+.nxgov-entity-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--nxgov-space-300);
+  min-width: 0;
+}
+
+.nxgov-entity-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--nxgov-space-200) var(--nxgov-space-300);
+}
+
+.nxgov-entity-card__icon {
+  flex: none;
+  width: var(--nxgov-size-icon-md);
+  height: var(--nxgov-size-icon-md);
+  color: var(--nxgov-color-primary);
+  fill: currentColor;
+}
+
+/* Encabezado propio: no hereda el h3 global del CDN v5 */
+.nxgov-entity-card__title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h5);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+  overflow-wrap: anywhere;
+}
+
+.nxgov-entity-card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--nxgov-space-200);
+  margin: 0;
+  color: var(--nxgov-color-text-secondary);
+  font-size: var(--nxgov-font-size-body-3);
+}
+
+.nxgov-entity-card__details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nxgov-space-300) var(--nxgov-space-600);
+  margin: 0;
+}
+
+.nxgov-entity-card__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-050);
+  min-width: 0;
+}
+
+.nxgov-entity-card__label {
+  margin: 0;
+  color: var(--nxgov-color-text-secondary);
+  font-size: var(--nxgov-font-size-body-3);
+}
+
+.nxgov-entity-card__value {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.nxgov-entity-card__action {
+  flex: none;
+}
+
+/* Área clicable = tarjeta completa */
+.nxgov-entity-card__action::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--nxgov-radius-card);
+}
+
+/* El anillo lo dibuja la tarjeta (:focus-within); se evita el doble anillo del botón */
+.nxgov-entity-card__action:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 767px) {
+  .nxgov-entity-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--nxgov-space-400);
+    padding: var(--nxgov-space-400);
+  }
+
+  .nxgov-entity-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nxgov-entity-card {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-entity-card {
+    border-color: CanvasText;
+  }
+}

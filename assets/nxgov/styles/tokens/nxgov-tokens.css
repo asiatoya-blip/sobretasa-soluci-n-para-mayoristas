@@ -1,0 +1,215 @@
+/*
+ * nxgov-tokens.css — GENERADO por tools/build-tokens.mjs. NO EDITAR A MANO.
+ * Fuente: src/styles/tokens/design-tokens.json (v0.1.0, 2026-10-15)
+ * Capa global: solo custom properties. Los breakpoints se exponen como referencia
+ * (las variables CSS no funcionan dentro de @media).
+ */
+:root {
+  /* color */
+  --nxgov-color-primary: #0943B5; /* Govco Cobalt — acciones principales, enlaces, bordes de botón */
+  --nxgov-color-primary-hover: #4672C8; /* Havelock Blue — hover/focus de botones (blanco encima 4.67:1) */
+  --nxgov-color-primary-light: #B5C7E9; /* Tropical Blue — hover de botones secundarios */
+  --nxgov-color-primary-lighter: #E5ECF8; /* Solitude — fondos informativos */
+  --nxgov-color-portage: #83A0DA;
+  --nxgov-color-white: #FFFFFF;
+  --nxgov-color-black: #000000; /* Texto principal (21:1) */
+  --nxgov-color-text-secondary: #4C4C4C; /* Matterhorn — texto secundario */
+  --nxgov-color-grey: #7E7E7E; /* Solo decorativo/iconos; no usar para texto pequeño */
+  --nxgov-color-border: #B9B9B9; /* Silver — divisores (decorativo, 1.96:1) */
+  --nxgov-color-border-subtle: #E2E8F0; /* Borde de tarjetas laterales Resumen/Ayuda (Figma 239:2180). Decorativo; no existe en el CDN */
+  --nxgov-color-disabled: #C8C8C8; /* Silver dis — fondo/borde de controles deshabilitados */
+  --nxgov-color-bg-subtle: #F4F4F4; /* White Smoke */
+  --nxgov-color-success: #158361;
+  --nxgov-color-success-light: #CDE6DF;
+  --nxgov-color-error: #A80521; /* Acciones destructivas (Eliminar) — 7.75:1 sobre blanco */
+  --nxgov-color-danger: var(--nxgov-color-error); /* Alias semántico de error para formularios/estados */
+  --nxgov-color-placeholder: #757575; /* Texto de ejemplo en campos — 4.61:1 sobre blanco (Figma 42:1143) */
+  --nxgov-color-border-input: var(--nxgov-color-grey); /* Borde de campos — 4.06:1 sobre blanco (≥3:1) */
+  --nxgov-color-error-light: #EECDD2;
+  --nxgov-color-warning: #FDAA29;
+  --nxgov-color-orange: #F0572D;
+  --nxgov-color-yellow-dark: #9D7700; /* Golden Brown — NO usar como texto sobre yellow-light (3.35:1) */
+  --nxgov-color-yellow: #FECC2F; /* Sunglow */
+  --nxgov-color-yellow-light: #FEE697; /* Vis Vis */
+  --nxgov-color-yellow-lighter: #FFFAE8; /* Corn Silk */
+  --nxgov-color-tulip: #E8A045; /* Borde inferior de cabecera GOV.CO */
+  --nxgov-color-overlay-list: rgba(244, 244, 244, 0.5); /* Fondo del contenedor de lista (Figma 'Items' 39:544) */
+
+  /* tag */
+
+  /* tag.completed */
+  --nxgov-tag-completed-fg: #0D684B; /* Verde — 5.16:1 sobre bg */
+  --nxgov-tag-completed-bg: var(--nxgov-color-success-light);
+
+  /* tag.pending */
+  --nxgov-tag-pending-fg: #806000; /* Amarillo — 4.73:1 sobre bg */
+  --nxgov-tag-pending-bg: var(--nxgov-color-yellow-light);
+
+  /* tag.error */
+  --nxgov-tag-error-fg: #B30937; /* Rojo — 4.75:1 sobre bg */
+  --nxgov-tag-error-bg: var(--nxgov-color-error-light);
+
+  /* tag.signed */
+  --nxgov-tag-signed-fg: var(--nxgov-color-primary); /* Azul informativo — 7.13:1 sobre bg */
+  --nxgov-tag-signed-bg: var(--nxgov-color-primary-lighter);
+
+  /* tag.neutral */
+  --nxgov-tag-neutral-fg: var(--nxgov-color-text-secondary); /* Gris — 8.62:1 sobre bg. ICA: Borrador (Figma 'Etiqueta de estado' Tipo=Neutral) */
+  --nxgov-tag-neutral-bg: var(--nxgov-color-bg-subtle);
+
+  /* alert */
+
+  /* alert.info */
+  --nxgov-alert-info-fg: var(--nxgov-color-primary); /* 7.69:1 sobre bg */
+  --nxgov-alert-info-bg: var(--nxgov-color-bg-subtle);
+  --nxgov-alert-info-border: var(--nxgov-color-primary);
+
+  /* alert.success */
+  --nxgov-alert-success-fg: var(--nxgov-tag-completed-fg); /* 5.16:1 sobre bg (Figma #158361 = 3.59:1, corregido) */
+  --nxgov-alert-success-bg: var(--nxgov-color-success-light);
+  --nxgov-alert-success-border: var(--nxgov-color-success);
+
+  /* alert.warning */
+  --nxgov-alert-warning-fg: var(--nxgov-tag-pending-fg); /* 5.59:1 sobre bg */
+  --nxgov-alert-warning-bg: var(--nxgov-color-yellow-lighter); /* Corn Silk (fondos Kit 9.2) */
+  --nxgov-alert-warning-border: var(--nxgov-color-yellow-dark); /* Golden Brown — 3.96:1 sobre bg (≥3:1) */
+
+  /* alert.danger */
+  --nxgov-alert-danger-fg: var(--nxgov-color-error); /* 5.28:1 sobre bg */
+  --nxgov-alert-danger-bg: var(--nxgov-color-error-light);
+  --nxgov-alert-danger-border: var(--nxgov-color-error);
+
+  /* font */
+
+  /* font.family */
+  --nxgov-font-family-heading: "Nunito Sans", Verdana, sans-serif;
+  --nxgov-font-family-body: "Nunito Sans", Verdana, sans-serif;
+  --nxgov-font-family-nav: "Work Sans", Verdana, sans-serif;
+
+  /* font.weight */
+  --nxgov-font-weight-regular: 400;
+  --nxgov-font-weight-medium: 500;
+  --nxgov-font-weight-semibold: 600;
+  --nxgov-font-weight-bold: 700;
+
+  /* font.size */
+  --nxgov-font-size-h1: 2.625rem;
+  --nxgov-font-size-h2: 2.125rem;
+  --nxgov-font-size-h3: 1.625rem;
+  --nxgov-font-size-h4: 1.375rem;
+  --nxgov-font-size-h5: 1.25rem;
+  --nxgov-font-size-h6: 1rem;
+  --nxgov-font-size-description: 1.25rem;
+  --nxgov-font-size-body-1: 0.9375rem;
+  --nxgov-font-size-body-2: 0.875rem;
+  --nxgov-font-size-body-3: 0.75rem;
+  --nxgov-font-size-badge-sm: 0.6875rem; /* Número del badge pequeño de renglón (Figma 10.9px → 11px) */
+  --nxgov-font-size-nav: 0.875rem;
+
+  /* font.line-height */
+  --nxgov-font-line-height-base: 1.4;
+  --nxgov-font-line-height-button: 1rem;
+  --nxgov-font-line-height-nav: 1.0938rem;
+
+  /* space */
+  --nxgov-space-100: 4px;
+  --nxgov-space-200: 8px;
+  --nxgov-space-250: 10px; /* Gap entre botones de acción */
+  --nxgov-space-300: 12px;
+  --nxgov-space-400: 16px;
+  --nxgov-space-600: 24px;
+  --nxgov-space-800: 32px;
+  --nxgov-space-1000: 40px;
+  --nxgov-space-1400: 56px; /* Padding lateral del modal (Figma 232:4164) */
+  --nxgov-space-050: 2px; /* Aire interno mínimo (buscador, Figma 36:495) */
+
+  /* radius */
+  --nxgov-radius-input: 5px; /* Campos de formulario (Figma Lista 45:962) */
+  --nxgov-radius-alert: 3px; /* Alerta de notificación (Figma 45:1160) */
+  --nxgov-radius-badge-sm: 6.5px; /* Badge pequeño de renglón 24px (Figma 239:2186) */
+  --nxgov-radius-pagination: 4px; /* Página actual del paginador (Figma 228:1944) */
+  --nxgov-radius-card: 12px;
+  --nxgov-radius-list: 24px; /* Esquinas superiores del contenedor de lista */
+  --nxgov-radius-pill: 25px; /* Botones y etiquetas (CDN v5: 1.563rem) */
+  --nxgov-radius-full: 1000px;
+
+  /* shadow */
+  --nxgov-shadow-input: 0px 4px 0px 0px rgba(9, 67, 181, 0.14); /* Figma usa #3366CC (v4) al 14% → Cobalt */
+  --nxgov-shadow-card: 0px 2px 1px 0px rgba(0, 0, 0, 0.15);
+
+  /* border */
+  --nxgov-border-width: 1px; /* Figma botones/divisores (CDN v5 botones: 2px) */
+  --nxgov-border-width-strong: 2px;
+
+  /* focus */
+  --nxgov-focus-ring-width: 2px; /* Kit 9.2 dibuja 1.5px; CDN v5 usa 2px. Se adopta 2px (WCAG 2.4.13 recomienda ≥2px) */
+  --nxgov-focus-ring-offset: 3px;
+  --nxgov-focus-ring-color: var(--nxgov-color-black);
+  --nxgov-focus-ring-color-inverse: var(--nxgov-color-white); /* Sobre fondos oscuros */
+
+  /* size */
+  --nxgov-size-control-height: 42px; /* Botones */
+  --nxgov-size-input-height: 38px;
+  --nxgov-size-segmented-height: 67px; /* Alto del selector segmentado (Figma 271:1562) */
+  --nxgov-size-tag-height: 22px;
+  --nxgov-size-icon-sm: 18px;
+  --nxgov-size-icon-xs: 10px; /* Ícono dentro del botón circular de 24px del panel de ayuda (Figma 239:2209) */
+  --nxgov-size-icon-compact: 14px; /* Lupa del buscador y separador de la miga de pan (Figma 36:495, 35:361) */
+  --nxgov-size-icon-md: 24px;
+  --nxgov-size-icon-lg: 30px; /* Ícono del FAB */
+  --nxgov-size-icon-xl: 70px; /* Ícono principal del modal (Figma 232:4164) */
+  --nxgov-size-fab: 70px; /* FAB notificaciones (Figma 260:2871) */
+  --nxgov-size-fab-mobile: 56px;
+  --nxgov-size-badge: 20px;
+  --nxgov-size-badge-mobile: 16px;
+  --nxgov-size-number-badge: 44px; /* Badge numerado de renglón/sección (Figma 45:1666, 232:4483) */
+  --nxgov-size-number-badge-sm: 24px; /* Badge numerado del resumen lateral (Figma 239:2186) */
+  --nxgov-size-stepper-marker: 44px; /* Círculo del paso (Figma 251:2129) */
+  --nxgov-size-stepper-marker-compact: 32px; /* Variante --compact (formularios densos) */
+  --nxgov-size-stepper-track: 5px; /* Grosor de la barra de progreso (Figma 251:2128) */
+  --nxgov-size-flyout: 464px; /* Ancho del panel lateral (Figma 271:2522) */
+  --nxgov-size-modal: 536px; /* Ancho del modal (Figma 232:4164) */
+  --nxgov-size-pagination: 40px; /* Celda del paginador (Figma 228:1938) */
+  --nxgov-size-filter-field: 255px; /* Ancho base de un filtro del listado (Figma 42:1222) */
+  --nxgov-size-filter-field-date: 280px; /* Filtro de fecha "Periodo declarado" (Figma 42:1143) */
+  --nxgov-size-container-max: 1280px; /* 1440 − 2×80px de margen */
+  --nxgov-size-gutter-page: 80px;
+
+  /* breakpoint */
+  --nxgov-breakpoint-sm: 480px;
+  --nxgov-breakpoint-md: 767px;
+  --nxgov-breakpoint-lg: 991px;
+  --nxgov-breakpoint-xl: 1280px;
+
+  /* motion */
+  --nxgov-motion-duration-fast: 150ms; /* Hover, foco, color */
+  --nxgov-motion-duration-normal: 250ms; /* Fade, aparición de alertas */
+  --nxgov-motion-duration-slow: 350ms; /* Paneles (flyout slide-in) */
+  --nxgov-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --nxgov-motion-easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1); /* Entradas (desacelera) */
+  --nxgov-motion-easing-exit: cubic-bezier(0.3, 0, 0.8, 0.15); /* Salidas (acelera) */
+
+  /* transition */
+  --nxgov-transition-fast: var(--nxgov-motion-duration-fast) var(--nxgov-motion-easing-standard);
+  --nxgov-transition-normal: var(--nxgov-motion-duration-normal) var(--nxgov-motion-easing-standard);
+  --nxgov-transition-slow: var(--nxgov-motion-duration-slow) var(--nxgov-motion-easing-standard);
+
+  /* z-index */
+  --nxgov-z-index-sticky: 1020;
+  --nxgov-z-index-backdrop: 1040; /* = $zindex-offcanvas-backdrop */
+  --nxgov-z-index-flyout: 1045; /* = $zindex-offcanvas */
+  --nxgov-z-index-modal: 1055; /* = $zindex-modal */
+  --nxgov-z-index-toast: 1090; /* = $zindex-toast */
+
+  /* overlay */
+  --nxgov-overlay-backdrop: rgba(28, 35, 40, 0.67); /* Figma 271:2518 */
+  --nxgov-overlay-shadow: -8px 0px 24px 0px rgba(0, 0, 0, 0.16);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --nxgov-motion-duration-fast: 0ms;
+    --nxgov-motion-duration-normal: 0ms;
+    --nxgov-motion-duration-slow: 0ms;
+  }
+}

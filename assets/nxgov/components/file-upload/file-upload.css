@@ -1,0 +1,198 @@
+/*
+ * nxgov-file-upload — Molécula: carga del PDF firmado (ICA pantalla 07, Figma "Carga de archivo").
+ * Sustituye a container-carga-archivos-govco (v5: callbacks rotos, innerHTML con el nombre → XSS, label sin id).
+ *
+ *   div.nxgov-file-upload [data-nxgov-component="file-upload"]
+ *   ├── label.__label [for → __input]
+ *   ├── div.__dropzone                      (zona de arrastre; .nxgov-is-dragover al arrastrar)
+ *   │   ├── svg.__icon · p.__instruction
+ *   │   ├── input.__input [type=file]       (visualmente oculto, enfocable)
+ *   │   └── label.nxgov-button.nxgov-button--outline.__trigger [for → __input]  ("Seleccionar archivo")
+ *   ├── div.__file [hidden]                 svg.__file-icon · span.__name · span.__meta · button.__remove
+ *   ├── p.__hint [id]                       "Solo archivos PDF. Tamaño máximo 200 MB."
+ *   └── p.__error [id, hidden]              mensaje de validación (ícono + texto + borde, no solo color)
+ *
+ * Estados: .nxgov-is-dragover · .nxgov-is-loaded · .nxgov-is-invalid (lógica en file-upload.js).
+ */
+
+.nxgov-file-upload {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-200);
+  margin: 0;
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-2);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-file-upload *,
+.nxgov-file-upload *::before,
+.nxgov-file-upload *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-file-upload__label {
+  margin: 0;
+  font-weight: var(--nxgov-font-weight-regular);
+}
+
+.nxgov-file-upload__dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--nxgov-space-300);
+  padding: var(--nxgov-space-800) var(--nxgov-space-600);
+  border: var(--nxgov-border-width) dashed var(--nxgov-color-border-input);
+  border-radius: var(--nxgov-radius-input);
+  background-color: var(--nxgov-color-white);
+  text-align: center;
+  transition:
+    border-color var(--nxgov-transition-fast),
+    background-color var(--nxgov-transition-fast);
+}
+
+.nxgov-file-upload.nxgov-is-dragover .nxgov-file-upload__dropzone {
+  border-width: var(--nxgov-border-width-strong);
+  border-color: var(--nxgov-color-primary);
+  background-color: var(--nxgov-color-primary-lighter);
+}
+
+.nxgov-file-upload.nxgov-is-invalid .nxgov-file-upload__dropzone {
+  border-color: var(--nxgov-color-danger);
+}
+
+.nxgov-file-upload.nxgov-is-loaded .nxgov-file-upload__dropzone {
+  display: none;
+}
+
+.nxgov-file-upload__icon {
+  width: var(--nxgov-size-icon-lg);
+  height: var(--nxgov-size-icon-lg);
+  color: var(--nxgov-color-primary);
+  fill: currentColor;
+}
+
+.nxgov-file-upload.nxgov-is-invalid .nxgov-file-upload__icon {
+  color: var(--nxgov-color-danger);
+}
+
+.nxgov-file-upload__instruction {
+  margin: 0;
+  font-size: var(--nxgov-font-size-body-1);
+}
+
+/* Input nativo visualmente oculto pero enfocable; el foco se ve en el botón asociado */
+.nxgov-file-upload__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.nxgov-file-upload__input:focus-visible + .nxgov-file-upload__trigger {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-offset);
+}
+
+.nxgov-file-upload__trigger {
+  cursor: pointer;
+}
+
+/* Archivo cargado */
+.nxgov-file-upload__file {
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-300);
+  padding: var(--nxgov-space-400);
+  border: var(--nxgov-border-width) solid var(--nxgov-color-border);
+  border-radius: var(--nxgov-radius-input);
+  background-color: var(--nxgov-color-bg-subtle);
+}
+
+.nxgov-file-upload__file[hidden] {
+  display: none;
+}
+
+.nxgov-file-upload__file-icon {
+  flex: none;
+  width: var(--nxgov-size-icon-md);
+  height: var(--nxgov-size-icon-md);
+  color: var(--nxgov-color-error);
+  fill: currentColor;
+}
+
+.nxgov-file-upload__file-info {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nxgov-file-upload__name {
+  overflow-wrap: anywhere;
+}
+
+.nxgov-file-upload__meta {
+  color: var(--nxgov-tag-completed-fg);
+  font-size: var(--nxgov-font-size-body-3);
+}
+
+.nxgov-file-upload__hint,
+.nxgov-file-upload__error {
+  margin: 0;
+  font-size: var(--nxgov-font-size-body-3);
+}
+
+.nxgov-file-upload__hint {
+  color: var(--nxgov-color-text-secondary);
+}
+
+.nxgov-file-upload__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--nxgov-space-100);
+  color: var(--nxgov-color-danger);
+}
+
+.nxgov-file-upload__error[hidden] {
+  display: none;
+}
+
+.nxgov-file-upload__error-icon {
+  flex: none;
+  width: var(--nxgov-size-icon-sm);
+  height: var(--nxgov-size-icon-sm);
+  fill: currentColor;
+}
+
+@media (max-width: 480px) {
+  .nxgov-file-upload__dropzone {
+    padding: var(--nxgov-space-600) var(--nxgov-space-400);
+  }
+
+  .nxgov-file-upload__trigger {
+    width: 100%;
+  }
+
+  .nxgov-file-upload__file {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nxgov-file-upload__dropzone {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-file-upload__dropzone,
+  .nxgov-file-upload__file {
+    border-color: CanvasText;
+  }
+}

@@ -1,0 +1,447 @@
+/*
+ * nxgov-table — Organismo: tabla de datos con celdas editables. Caso SOGAS: liquidación (Paso 3, Figma 45:1323).
+ * Figma dibuja "tarjetas por producto"; aquí se modela como <table> real:
+ *   thead  = cabecera F1–F6 (Figma 45:1601, Nunito Bold 16, línea inferior Silver)
+ *   tbody  = una fila por producto; th[scope=row] con badge numerado (Figma 45:1666: 44px Cobalt, radio 12)
+ *   anexo  = fila de ancho completo con tabla anidada (Lote · F2 · F4 % · F3 · F6) y "Agregar dispersión" (Figma 45:1663)
+ *   tfoot  = renglones 8/9/10 (Figma 232:4480: blanco · Corn Silk · Cobalt)
+ *
+ * Móvil (<768px):
+ *   --stack  (por defecto) cada fila se apila; cada td muestra su columna con ::before { content: attr(data-label) }.
+ *            Los elementos de tabla llevan roles ARIA explícitos en el HTML para no perder la semántica al cambiar display.
+ *   --scroll conserva la tabla y desplaza en horizontal dentro de .nxgov-table__scroll (región enfocable con nombre).
+ */
+
+.nxgov-table {
+  box-sizing: border-box;
+  width: 100%;
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-1);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-table *,
+.nxgov-table *::before,
+.nxgov-table *::after {
+  box-sizing: border-box;
+}
+
+/* Contenedor de desplazamiento (variante --scroll o tablas muy anchas) */
+.nxgov-table__scroll {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.nxgov-table__scroll:focus-visible {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-width);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nxgov-table__scroll {
+    scroll-behavior: auto;
+  }
+}
+
+.nxgov-table__table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  caption-side: top;
+  color: inherit;
+  font: inherit;
+}
+
+.nxgov-table__caption {
+  padding: 0 0 var(--nxgov-space-300);
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h5);
+  font-weight: var(--nxgov-font-weight-bold);
+  text-align: left;
+}
+
+.nxgov-table__caption-hint {
+  display: block;
+  margin-top: var(--nxgov-space-100);
+  color: var(--nxgov-color-text-secondary);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-2);
+  font-weight: var(--nxgov-font-weight-regular);
+}
+
+/* ---------- Celdas ---------- */
+.nxgov-table__head-cell,
+.nxgov-table__row-head,
+.nxgov-table__cell {
+  padding: var(--nxgov-space-300);
+  border: 0;
+  border-bottom: var(--nxgov-border-width) solid var(--nxgov-color-border);
+  background: transparent;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.nxgov-table__head-cell {
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h6);
+  font-weight: var(--nxgov-font-weight-bold);
+  white-space: nowrap;
+}
+
+.nxgov-table__row-head {
+  font-weight: var(--nxgov-font-weight-regular);
+}
+
+.nxgov-table__product {
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-400);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h6);
+  font-weight: var(--nxgov-font-weight-bold);
+}
+
+.nxgov-table__number {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--nxgov-size-number-badge);
+  height: var(--nxgov-size-number-badge);
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-primary);
+  color: var(--nxgov-color-white);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h5);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: 1;
+}
+
+/* Columnas numéricas: derecha + cifras tabulares */
+.nxgov-table__head-cell--numeric,
+.nxgov-table__cell--numeric {
+  text-align: right;
+}
+
+.nxgov-table__value {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.nxgov-table__value--muted {
+  color: var(--nxgov-color-text-secondary);
+}
+
+/* Celda editable: el input nunca toca los bordes de la celda */
+.nxgov-table__cell--input {
+  min-width: 9rem;
+  padding-block: var(--nxgov-space-200);
+}
+
+.nxgov-table__cell--input .nxgov-input {
+  min-width: 0;
+}
+
+/* Fila con foco/edición: realce sutil (ayuda a no perder la fila en tablas largas) */
+.nxgov-table__row {
+  transition: background-color var(--nxgov-transition-fast);
+}
+
+.nxgov-table__row:focus-within {
+  background-color: var(--nxgov-color-primary-lighter);
+}
+
+/* ---------- Anexo (tabla anidada de lotes) ---------- */
+.nxgov-table__annex-cell {
+  padding: 0 0 var(--nxgov-space-400);
+  border-bottom: var(--nxgov-border-width) solid var(--nxgov-color-border);
+}
+
+.nxgov-table__annex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--nxgov-space-300);
+  margin-inline-start: calc(var(--nxgov-size-number-badge) + var(--nxgov-space-400) + var(--nxgov-space-300));
+  padding: var(--nxgov-space-400) var(--nxgov-space-600);
+  border: var(--nxgov-border-width) dashed var(--nxgov-color-border);
+  border-radius: var(--nxgov-radius-card);
+}
+
+.nxgov-table__annex .nxgov-table__table {
+  align-self: stretch;
+}
+
+.nxgov-table__annex .nxgov-table__caption {
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-1);
+  font-weight: var(--nxgov-font-weight-regular);
+}
+
+.nxgov-table__annex .nxgov-table__head-cell {
+  padding-inline: var(--nxgov-space-200);
+}
+
+.nxgov-table__annex .nxgov-table__row-head {
+  color: var(--nxgov-color-text-secondary);
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h6);
+  white-space: nowrap;
+}
+
+/* Fila recién agregada: entrada suave */
+.nxgov-table__row.nxgov-is-entering {
+  animation: nxgov-table-row-in var(--nxgov-motion-duration-normal) var(--nxgov-motion-easing-enter);
+}
+
+@keyframes nxgov-table-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--nxgov-space-200)));
+  }
+}
+
+/* ---------- Totales (tfoot) — Figma 232:4480 ---------- */
+.nxgov-table__foot .nxgov-table__row-head,
+.nxgov-table__foot .nxgov-table__cell,
+.nxgov-table__total > .nxgov-table__row-head,
+.nxgov-table__total > .nxgov-table__cell {
+  padding-block: var(--nxgov-space-400);
+  border-bottom: 0;
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h5);
+  font-weight: var(--nxgov-font-weight-bold);
+  transition: background-color var(--nxgov-transition-fast);
+}
+
+/* Variante --list: tabla de renglones (Figma 46:2104, Sección H). Cada fila es una franja a todo el ancho;
+   --stacked pone el título arriba y el campo debajo (renglones 13–14). Seguro para la semántica: las filas
+   llevan role=row/rowheader/cell explícitos (display no anula los roles). */
+.nxgov-table--list .nxgov-table__table,
+.nxgov-table--list .nxgov-table__body,
+.nxgov-table--list .nxgov-table__foot {
+  display: block;
+}
+
+.nxgov-table--list .nxgov-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.nxgov-table--list .nxgov-table__row--stacked {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.nxgov-table--list .nxgov-table__row > * {
+  display: block;
+  border-radius: 0;
+}
+
+/* El fondo y las esquinas los lleva la franja completa (no cada celda) */
+.nxgov-table--list .nxgov-table__total--penalty,
+.nxgov-table--list .nxgov-table__total--grand {
+  overflow: hidden;
+  border-radius: var(--nxgov-radius-card);
+}
+
+.nxgov-table--list .nxgov-table__total--penalty {
+  background-color: var(--nxgov-color-yellow-lighter);
+}
+
+.nxgov-table--list .nxgov-table__total--grand {
+  background-color: var(--nxgov-color-primary);
+}
+
+.nxgov-table--list .nxgov-table__row--stacked > .nxgov-table__row-head {
+  padding-bottom: var(--nxgov-space-200);
+}
+
+.nxgov-table--list .nxgov-table__row--stacked > .nxgov-table__cell {
+  padding-top: 0;
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-2);
+  font-weight: var(--nxgov-font-weight-regular);
+}
+
+.nxgov-table__help {
+  display: inline-block;
+  margin: var(--nxgov-space-300) 0 0;
+  color: var(--nxgov-color-primary);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-2);
+}
+
+.nxgov-table__help-link {
+  border-radius: var(--nxgov-radius-alert);
+  color: inherit;
+  text-decoration: underline;
+}
+
+.nxgov-table__help-link:focus-visible {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-offset);
+}
+
+.nxgov-table__total--penalty > * {
+  background-color: var(--nxgov-color-yellow-lighter);
+}
+
+.nxgov-table__total--penalty .nxgov-table__number {
+  background-color: var(--nxgov-color-yellow-light);
+  color: var(--nxgov-tag-pending-fg); /* Figma #9D7700 (3.35:1) → Kit #806000 (4.73:1) */
+}
+
+.nxgov-table__total--grand > * {
+  background-color: var(--nxgov-color-primary);
+  color: var(--nxgov-color-white);
+}
+
+.nxgov-table__total--grand .nxgov-table__number {
+  background-color: var(--nxgov-color-white);
+  color: var(--nxgov-color-primary);
+}
+
+.nxgov-table__foot .nxgov-table__row:last-child > :first-child {
+  border-end-start-radius: var(--nxgov-radius-card);
+}
+
+.nxgov-table__foot .nxgov-table__row:last-child > :last-child {
+  border-end-end-radius: var(--nxgov-radius-card);
+}
+
+/* Cifra de total destacada en caja (Figma: valor en caja White Smoke) */
+.nxgov-table__amount {
+  display: inline-block;
+  min-width: 12ch;
+  padding: calc(var(--nxgov-space-250) - var(--nxgov-border-width)) var(--nxgov-space-400);
+  border: var(--nxgov-border-width) solid var(--nxgov-color-border-input);
+  border-radius: var(--nxgov-radius-input);
+  background-color: var(--nxgov-color-bg-subtle);
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-1);
+  font-weight: var(--nxgov-font-weight-regular);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------- Variante --scroll: ancho mínimo para que el contenedor desplace ---------- */
+.nxgov-table--scroll .nxgov-table__table {
+  min-width: 860px;
+}
+
+/* ---------- Móvil: apilado por data-label (variante por defecto) ---------- */
+@media (max-width: 767px) {
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__table,
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__table > :is(tbody, tfoot),
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__table > :is(tbody, tfoot) > tr,
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__table > :is(tbody, tfoot) > tr > :is(th, td) {
+    display: block;
+    width: 100%;
+  }
+
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__caption {
+    display: block;
+    width: 100%;
+  }
+
+  /* Cabecera: oculta visualmente (los roles + data-label mantienen el contexto) */
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__table > thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__body > .nxgov-table__row {
+    padding: var(--nxgov-space-300) 0;
+    border-bottom: var(--nxgov-border-width) solid var(--nxgov-color-border);
+  }
+
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__table > :is(tbody, tfoot) > tr > :is(th, td) {
+    border-bottom: 0;
+  }
+
+  /* Celda apilada: rótulo de la columna a la izquierda, valor a la derecha */
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__cell[data-label] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    align-items: center;
+    gap: var(--nxgov-space-300);
+    padding-block: var(--nxgov-space-200);
+    text-align: right;
+  }
+
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__cell[data-label]::before {
+    content: attr(data-label);
+    content: attr(data-label) / ""; /* texto alternativo vacío: el lector ya obtiene la columna por los roles */
+    color: var(--nxgov-color-text-secondary);
+    font-family: var(--nxgov-font-family-heading);
+    font-size: var(--nxgov-font-size-body-2);
+    font-weight: var(--nxgov-font-weight-bold);
+    text-align: left;
+  }
+
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__cell--input {
+    min-width: 0;
+  }
+
+  .nxgov-table__annex {
+    margin-inline-start: 0;
+    padding: var(--nxgov-space-300);
+  }
+
+  .nxgov-table:not(.nxgov-table--scroll) .nxgov-table__annex-cell {
+    padding: 0 0 var(--nxgov-space-300);
+    border-bottom: var(--nxgov-border-width) solid var(--nxgov-color-border);
+  }
+
+  /* Totales apilados: etiqueta arriba, cifra debajo alineada a la derecha */
+  .nxgov-table__foot .nxgov-table__row-head,
+  .nxgov-table__foot .nxgov-table__cell {
+    padding: var(--nxgov-space-300);
+    font-size: var(--nxgov-font-size-h6);
+  }
+
+  .nxgov-table__foot .nxgov-table__cell {
+    text-align: right;
+  }
+
+  .nxgov-table__foot .nxgov-table__row:last-child > :first-child {
+    border-end-start-radius: 0;
+  }
+
+  .nxgov-table__foot .nxgov-table__row:last-child > :last-child {
+    border-end-start-radius: var(--nxgov-radius-card);
+  }
+
+  .nxgov-table__number {
+    width: var(--nxgov-size-stepper-marker-compact);
+    height: var(--nxgov-size-stepper-marker-compact);
+    font-size: var(--nxgov-font-size-body-1);
+  }
+
+  .nxgov-table__product {
+    gap: var(--nxgov-space-300);
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-table__number {
+    border: var(--nxgov-border-width) solid CanvasText;
+  }
+
+  .nxgov-table__total--grand > * {
+    border-top: var(--nxgov-border-width-strong) solid CanvasText;
+  }
+}

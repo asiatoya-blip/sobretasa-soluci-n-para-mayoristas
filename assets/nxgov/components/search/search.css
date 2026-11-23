@@ -1,0 +1,100 @@
+/*
+ * nxgov-search — Molécula: buscador (Figma "Buscador" 36:495: píldora blanca, borde Cobalt, texto Verdana 14,
+ * botón circular Cobalt con lupa blanca 14px). Sustituye a .govco-search del CDN v5 (botón sin nombre accesible,
+ * aria-hidden en un botón enfocable, solo inicializa la primera instancia).
+ *
+ *   form.nxgov-search[role=search]
+ *   ├── label.nxgov-sr-only[for]                       nombre accesible del campo
+ *   ├── input.nxgov-search__input[type=search]
+ *   └── button.nxgov-search__button[type=submit] > svg.nxgov-search__icon[aria-hidden] + span.nxgov-sr-only "Buscar"
+ */
+
+.nxgov-search {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--nxgov-space-200);
+  min-width: 0;
+  min-height: var(--nxgov-size-input-height);
+  margin: 0;
+  padding: var(--nxgov-space-050) var(--nxgov-space-100) var(--nxgov-space-050) var(--nxgov-space-600);
+  border: var(--nxgov-border-width) solid var(--nxgov-color-primary);
+  border-radius: var(--nxgov-radius-full);
+  background-color: var(--nxgov-color-white);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-2);
+  line-height: var(--nxgov-font-line-height-base);
+  transition: box-shadow var(--nxgov-transition-fast);
+}
+
+.nxgov-search *,
+.nxgov-search *::before,
+.nxgov-search *::after {
+  box-sizing: border-box;
+}
+
+/* El anillo de foco rodea la píldora completa (el input no dibuja el suyo) */
+.nxgov-search:focus-within {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-offset);
+}
+
+.nxgov-search__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: var(--nxgov-space-100) 0;
+  border: 0;
+  background: transparent;
+  color: var(--nxgov-color-black);
+  font: inherit;
+  appearance: none;
+}
+
+.nxgov-search__input::placeholder {
+  color: var(--nxgov-color-text-secondary);
+  opacity: 1;
+}
+
+.nxgov-search__input:focus {
+  outline: none;
+}
+
+.nxgov-search__input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.nxgov-search__button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: calc(var(--nxgov-size-icon-sm) + 2 * var(--nxgov-space-250));
+  height: calc(var(--nxgov-size-icon-sm) + 2 * var(--nxgov-space-250));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--nxgov-radius-full);
+  background-color: var(--nxgov-color-primary);
+  color: var(--nxgov-color-white);
+  cursor: pointer;
+  appearance: none;
+  transition: background-color var(--nxgov-transition-fast);
+}
+
+.nxgov-search__button:hover {
+  background-color: var(--nxgov-color-primary-hover);
+}
+
+.nxgov-search__button:focus {
+  outline: none;
+}
+
+.nxgov-search__button:focus-visible {
+  background-color: var(--nxgov-color-primary-hover);
+}
+
+.nxgov-search__icon {
+  width: var(--nxgov-size-icon-compact);
+  height: var(--nxgov-size-icon-compact);
+  fill: currentColor;
+}

@@ -1,0 +1,228 @@
+/*
+ * nxgov-declaration-list-item — Molécula. Figma: "Card" 46:3749 (contenedor "Items" 39:544).
+ * Compone átomos: nxgov-tag (estado) y nxgov-button (acciones). Esta hoja SOLO define layout y
+ * tipografía propios del bloque; nunca redefine colores ni estados de los átomos.
+ *
+ * Anatomía:
+ *   article.nxgov-declaration-list-item[data-nxgov-status]
+ *   ├── .__summary          grilla de 4 columnas iguales (Periodo · Establecimiento · Total · Estado)
+ *   │   ├── .__cell--period  h3.__period + p.__created
+ *   │   └── dl.__details     .__field > dt.__label + dd.__value (×3)
+ *   └── .__actions          [role=group] > .nxgov-button.__action (×2–3)
+ */
+
+/* ---------- Reset encapsulado (protege frente a Bootstrap reboot y h1–h6/html del CDN v5) ---------- */
+.nxgov-declaration-list-item,
+.nxgov-declaration-list-item *,
+.nxgov-declaration-list-item *::before,
+.nxgov-declaration-list-item *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-declaration-list-item__period,
+.nxgov-declaration-list-item__created,
+.nxgov-declaration-list-item__details,
+.nxgov-declaration-list-item__label,
+.nxgov-declaration-list-item__value {
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- Bloque ---------- */
+.nxgov-declaration-list-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-250);
+  width: 100%;
+  margin: 0;
+  /* Borde transparente: delimita la tarjeta en modo de alto contraste, donde la sombra desaparece */
+  border: var(--nxgov-border-width) solid transparent;
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-white);
+  box-shadow: var(--nxgov-shadow-card);
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-1);
+  line-height: var(--nxgov-font-line-height-base);
+  text-align: left;
+}
+
+/* ---------- Resumen (fila de datos) ---------- */
+.nxgov-declaration-list-item__summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--nxgov-space-300);
+  padding: var(--nxgov-space-300);
+  border-bottom: var(--nxgov-border-width) solid var(--nxgov-color-border);
+}
+
+.nxgov-declaration-list-item__cell--period {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nxgov-space-250);
+  min-width: 0;
+}
+
+/* Encabezado propio: tipografía fija para no heredar el h3 global del CDN v5 (26px). */
+.nxgov-declaration-list-item__period {
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h6);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+  color: inherit;
+}
+
+.nxgov-declaration-list-item__created {
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-3);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+/* Los 3 campos restantes ocupan 3 de las 4 columnas, con su propia sub-grilla de 3. */
+.nxgov-declaration-list-item__details {
+  display: grid;
+  grid-column: span 3;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--nxgov-space-300);
+}
+
+.nxgov-declaration-list-item__field {
+  min-width: 0;
+}
+
+/* En escritorio los rótulos los aporta la cabecera de la lista; aquí solo para lectores de pantalla. */
+.nxgov-declaration-list-item__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.nxgov-declaration-list-item__value {
+  overflow-wrap: anywhere;
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h6);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-declaration-list-item__amount {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* El átomo tag se usa tal cual; el bloque solo controla su encaje. */
+.nxgov-declaration-list-item__status {
+  max-width: 100%;
+}
+
+/* ---------- Acciones ---------- */
+.nxgov-declaration-list-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--nxgov-space-250);
+  padding: var(--nxgov-space-300);
+}
+
+/* ---------- Pie opcional: mensaje guía + acciones (ICA, Figma "Card de declaración") ---------- */
+.nxgov-declaration-list-item__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--nxgov-space-400);
+  padding: var(--nxgov-space-300) var(--nxgov-space-600);
+}
+
+.nxgov-declaration-list-item__footer .nxgov-declaration-list-item__actions {
+  padding: 0;
+}
+
+.nxgov-declaration-list-item__message {
+  display: flex;
+  flex: 1 1 18rem;
+  align-items: flex-start;
+  gap: var(--nxgov-space-200);
+  min-width: 0;
+  margin: 0;
+  color: var(--nxgov-color-text-secondary);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-3);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-declaration-list-item__message-icon {
+  flex: none;
+  width: var(--nxgov-size-icon-sm);
+  height: var(--nxgov-size-icon-sm);
+  fill: currentColor;
+}
+
+/* ---------- Responsive (breakpoints alineados al CDN v5) ---------- */
+/* ≤991px la cabecera de columnas de nxgov-declaration-list se oculta: los rótulos pasan a ser visibles. */
+@media (max-width: 991px) {
+  .nxgov-declaration-list-item__summary {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+
+  .nxgov-declaration-list-item__details {
+    grid-column: auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .nxgov-declaration-list-item__field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nxgov-space-100);
+  }
+
+  .nxgov-declaration-list-item__label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    color: var(--nxgov-color-text-secondary);
+    font-family: var(--nxgov-font-family-body);
+    font-size: var(--nxgov-font-size-body-2);
+    line-height: var(--nxgov-font-line-height-base);
+  }
+}
+
+@media (max-width: 767px) {
+  .nxgov-declaration-list-item__summary,
+  .nxgov-declaration-list-item__details {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Una columna: rótulo a la izquierda, valor a la derecha. */
+  .nxgov-declaration-list-item__field {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nxgov-space-300);
+  }
+}
+
+@media (max-width: 480px) {
+  .nxgov-declaration-list-item__action {
+    flex: 1 1 auto;
+  }
+
+  .nxgov-declaration-list-item__footer {
+    padding-inline: var(--nxgov-space-400);
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-declaration-list-item {
+    border-color: CanvasText;
+  }
+}

@@ -1,0 +1,89 @@
+/*
+ * nxgov-empty-state — Molécula: estado vacío (ICA primer ingreso, Figma "Estado vacío").
+ * Reemplaza el aviso "No tienes ninguna declaración en proceso" y el bloque de instrucciones fijo.
+ *
+ *   div.nxgov-empty-state
+ *   ├── span.__badge > svg.__icon     (decorativo)
+ *   ├── h3.__title
+ *   ├── p.__text
+ *   └── div.__actions > .nxgov-button  (opcional)
+ */
+
+.nxgov-empty-state {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--nxgov-space-400);
+  margin: 0;
+  padding: var(--nxgov-space-1000) var(--nxgov-space-600);
+  border: var(--nxgov-border-width) dashed var(--nxgov-color-border-subtle);
+  border-radius: var(--nxgov-radius-card);
+  background-color: var(--nxgov-color-white);
+  color: var(--nxgov-color-black);
+  font-family: var(--nxgov-font-family-body);
+  font-size: var(--nxgov-font-size-body-2);
+  line-height: var(--nxgov-font-line-height-base);
+  text-align: center;
+}
+
+.nxgov-empty-state *,
+.nxgov-empty-state *::before,
+.nxgov-empty-state *::after {
+  box-sizing: border-box;
+}
+
+.nxgov-empty-state__badge {
+  display: inline-grid;
+  place-items: center;
+  width: calc(2 * var(--nxgov-size-icon-lg));
+  height: calc(2 * var(--nxgov-size-icon-lg));
+  border-radius: var(--nxgov-radius-full);
+  background-color: var(--nxgov-color-primary-lighter);
+  color: var(--nxgov-color-primary);
+}
+
+.nxgov-empty-state__icon {
+  width: var(--nxgov-size-icon-lg);
+  height: var(--nxgov-size-icon-lg);
+  fill: currentColor;
+}
+
+.nxgov-empty-state__title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--nxgov-font-family-heading);
+  font-size: var(--nxgov-font-size-h5);
+  font-weight: var(--nxgov-font-weight-bold);
+  line-height: var(--nxgov-font-line-height-base);
+}
+
+.nxgov-empty-state__text {
+  max-width: 32rem;
+  margin: 0;
+  color: var(--nxgov-color-text-secondary);
+}
+
+.nxgov-empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--nxgov-space-250);
+}
+
+@media (max-width: 480px) {
+  .nxgov-empty-state {
+    padding: var(--nxgov-space-800) var(--nxgov-space-400);
+  }
+
+  .nxgov-empty-state__actions,
+  .nxgov-empty-state__actions > * {
+    width: 100%;
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-empty-state {
+    border-color: CanvasText;
+  }
+}

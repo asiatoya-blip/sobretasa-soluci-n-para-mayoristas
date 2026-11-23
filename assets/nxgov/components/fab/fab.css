@@ -1,0 +1,113 @@
+/*
+ * nxgov-fab — Átomo: botón flotante circular. Figma: "Frame 13" 260:2871 (70×70 Cobalt, ícono campana 30px blanco,
+ * indicador 20px #FDAA29 arriba a la derecha). Abre el flyout de notificaciones.
+ * El indicador es decorativo: el estado ("3 sin leer") va en el nombre accesible (WCAG 1.4.1).
+ */
+
+.nxgov-fab {
+  box-sizing: border-box;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--nxgov-size-fab);
+  height: var(--nxgov-size-fab);
+  margin: 0;
+  padding: 0;
+  border: var(--nxgov-border-width-strong) solid var(--nxgov-color-primary);
+  border-radius: var(--nxgov-radius-full);
+  background-color: var(--nxgov-color-primary);
+  color: var(--nxgov-color-white);
+  font-family: var(--nxgov-font-family-body); /* <button> no hereda la fuente sin el reboot de Bootstrap */
+  font-size: var(--nxgov-font-size-body-1);
+  line-height: var(--nxgov-font-line-height-base);
+  cursor: pointer;
+  appearance: none;
+  box-shadow: var(--nxgov-shadow-card);
+  transition:
+    background-color var(--nxgov-transition-fast),
+    border-color var(--nxgov-transition-fast),
+    transform var(--nxgov-transition-fast);
+}
+
+.nxgov-fab__icon {
+  width: var(--nxgov-size-icon-lg);
+  height: var(--nxgov-size-icon-lg);
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.nxgov-fab__badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--nxgov-size-badge);
+  height: var(--nxgov-size-badge);
+  border-radius: var(--nxgov-radius-full);
+  background-color: var(--nxgov-color-warning);
+  pointer-events: none;
+}
+
+.nxgov-fab:hover,
+.nxgov-fab:focus-visible,
+.nxgov-fab[aria-expanded="true"] {
+  border-color: var(--nxgov-color-primary-hover);
+  background-color: var(--nxgov-color-primary-hover);
+}
+
+.nxgov-fab:hover {
+  transform: scale(1.05);
+}
+
+.nxgov-fab:active {
+  transform: scale(0.97);
+}
+
+.nxgov-fab:focus {
+  outline: none;
+}
+
+.nxgov-fab:focus-visible {
+  outline: var(--nxgov-focus-ring-width) solid var(--nxgov-focus-ring-color);
+  outline-offset: var(--nxgov-focus-ring-offset);
+}
+
+/* Posición fija (Figma: esquina inferior derecha del contenido) */
+.nxgov-fab--fixed {
+  position: fixed;
+  right: var(--nxgov-space-600);
+  bottom: var(--nxgov-space-600);
+  z-index: var(--nxgov-z-index-sticky);
+}
+
+@media (max-width: 480px) {
+  .nxgov-fab {
+    width: var(--nxgov-size-fab-mobile);
+    height: var(--nxgov-size-fab-mobile);
+  }
+
+  .nxgov-fab__icon {
+    width: var(--nxgov-size-icon-md);
+    height: var(--nxgov-size-icon-md);
+  }
+
+  .nxgov-fab__badge {
+    width: var(--nxgov-size-badge-mobile);
+    height: var(--nxgov-size-badge-mobile);
+  }
+
+  .nxgov-fab--fixed {
+    right: var(--nxgov-space-400);
+    bottom: var(--nxgov-space-400);
+  }
+}
+
+@media (forced-colors: active) {
+  .nxgov-fab {
+    border-color: ButtonText;
+  }
+
+  .nxgov-fab__badge {
+    background-color: Highlight;
+  }
+}

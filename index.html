@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Declaraciones masivas de sobretasa · Prototipo</title>
+  <meta name="description" content="Prototipo navegable con datos simulados: carga masiva, firma por grupos y pago individual de declaraciones de sobretasa a la gasolina.">
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.www.gov.co/layout-govco-v5/all.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="assets/nxgov/styles/nxgov.css">
+  <link rel="stylesheet" href="assets/app/app.css">
+</head>
+<body>
+  <a class="nxgov-sr-only nxgov-sr-only--focusable" href="#app">Saltar al contenido</a>
+
+  <header class="app-no-print">
+    <div class="barra-superior-govco">
+      <a href="https://www.gov.co/" target="_blank" rel="noopener" aria-label="Portal del Estado Colombiano - GOV.CO (abre en una nueva pestaña)"></a>
+    </div>
+    <div class="app-header">
+      <div class="app-header__inner">
+        <a href="#/" class="app-header__logo"><img src="assets/img/logo-sogas.png" width="174" height="48" alt="Sogas · Declaraciones de sobretasa, ir al inicio"></a>
+      </div>
+    </div>
+    <div class="app-demo-strip" role="note">
+      <div class="app-header__inner">
+        <p><strong>Prototipo con datos simulados</strong> · Hoy: <span id="hoy-demo"></span> · No se envían correos ni se mueve dinero.</p>
+        <a href="#" class="app-demo-strip__link" data-app-reset>Reiniciar datos</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="position-fixed top-50 translate-middle-y app-no-print" style="right: 0; z-index: 1200;">
+    <div class="barra-accesibilidad-govco d-none d-lg-flex">
+      <button type="button" class="contrast" aria-label="Cambiar contraste"><span class="govco-contrast"></span></button>
+      <button type="button" class="decrease-font-size" aria-label="Disminuir letra" data-decrease-limit="-5"><span class="govco-font-minimize"></span></button>
+      <button type="button" class="increase-font-size" aria-label="Aumentar letra" data-increase-limit="5"><span class="govco-font-maximize"></span></button>
+    </div>
+  </div>
+
+  <main id="app" class="app-container" tabindex="-1"></main>
+  <div id="dialogos"></div>
+
+  <footer class="pie-pagina-govco app-no-print">
+    <div class="container-pie-pagina-govco">
+      <div class="first-section">
+        <h4>Sogas · Declaraciones de sobretasa a la gasolina</h4>
+        <div class="logo-container">
+          <img src="assets/img/logo-sogas.png" width="145" height="40" alt="Sogas">
+        </div>
+        <div class="contact-data-container">
+          <p>Prototipo de demostración para pruebas de usabilidad. Datos, entidades y valores simulados.</p>
+          <p>Horario de atención: lunes a viernes de 8:00 a. m. a 5:00 p. m.</p>
+        </div>
+        <div class="end-links-container">
+          <a href="#/ayuda/tutorial">Tutorial</a>
+          <a href="#/ayuda/manual">Manual de uso</a>
+        </div>
+      </div>
+      <div class="second-section">
+        <a href="https://www.gov.co/" target="_blank" rel="noopener" aria-label="Portal del Estado Colombiano - GOV.CO (abre en una nueva pestaña)"><span class="govco-logo"></span></a>
+        <div class="separator"></div>
+        <span class="govco-co" aria-hidden="true"></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/nxgov/utils/js/nxgov-icons.js"></script>
+  <script src="assets/nxgov/utils/js/emit.js"></script>
+  <script src="assets/nxgov/components/alert/alert.js"></script>
+  <script src="assets/nxgov/components/modal/modal.js"></script>
+  <script src="assets/nxgov/components/flyout/flyout.js"></script>
+  <script src="assets/nxgov/components/stepper/stepper.js"></script>
+  <script src="assets/nxgov/components/form/form.js"></script>
+  <script src="assets/nxgov/components/file-upload/file-upload.js"></script>
+  <script src="https://cdn.www.gov.co/layout-govco-v5/script.js" crossorigin="anonymous" defer></script>
+  <script type="module" src="assets/app/main.js"></script>
+</body>
+</html>
